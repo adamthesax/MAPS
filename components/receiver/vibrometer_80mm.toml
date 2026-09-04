@@ -1,0 +1,25 @@
+type  = "receiver"
+title = "Ø80 f150 receiver, draw-tube focus, 808 nm filter, 39 mm body"
+
+# Receiver telescope for the M.A.P.S. laser vibrometer (see docs/vibrometer/).
+# A bought Ø80 mm, f≈150 mm optic focuses the return beam through an 8 mm 808 nm
+# bandpass filter onto a BPW34 on a stock generic_29mm body.
+#
+# GUESSED — measure the real optic and filter and update:
+#   element_edge_thk  rim thickness of the Ø80 optic (seat depth)
+#   element_sag       how far the convex face bulges past the rim
+#   filter_thk        thickness of the 8 mm filter
+# The default params already describe this build; keys are pinned here so the
+# component is self-documenting and Customizer-free `make` renders match.
+[params]
+element_d        = 80
+clear_aperture_d = 74
+focal_length     = 150
+focus_nominal    = 150
+focus_travel     = 25
+draw_od          = 24
+draw_id          = 17
+filter_d         = 8.0
+filter_clear_d   = 6.0
+body_outer_x     = 39
+body_outer_y     = 39

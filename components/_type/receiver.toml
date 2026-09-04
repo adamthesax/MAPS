@@ -1,0 +1,9 @@
+# Component type: vibrometer receiver optic (draw-tube focuser for a bought Ø80 optic).
+# Type defs are hand-edited. `tools/gen.py` reads them to wire up the build.
+
+lib         = "scad/lib/receiver"
+entry       = "scad/receiver.scad"
+params_file = "scad/lib/receiver/params.scad"
+parts       = ["stem", "barrel", "lens_retainer", "filter_ring"]
+check_parts = ["stem", "barrel", "lens_retainer", "filter_ring", "assembly"]
+preview_cam = "0,0,-135,64,0,22,1000"
