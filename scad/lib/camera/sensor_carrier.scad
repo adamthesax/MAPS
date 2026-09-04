@@ -2,8 +2,8 @@
 // body ledge (and thus to the flange) with a shim stack for back-focus.
 
 include <params.scad>
-use <util.scad>
-use <hardware.scad>
+use <../util.scad>
+use <../hardware.scad>
 
 module sensor_carrier() {
     difference() {

@@ -18,7 +18,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openscad xvfb
 
-      - name: Check — every variant/part renders clean (--hardwarnings + asserts)
+      - name: Generated files are current (tools/gen.py --check)
+        run: python3 tools/gen.py --check
+
+      - name: Check — every component/part renders clean (--hardwarnings + asserts)
         run: make check
 
       - name: Render STLs

@@ -39,3 +39,20 @@ Per camera, `generic_29mm_c` baseline. Quantities scale with your board.
 ## Consumables
 
 - PETG or ASA filament, ~60 g per camera (see [print-settings.md](print-settings.md)).
+
+---
+
+## Lens barrel (`components/lens/*`)
+
+A separate component type — a printed holder for bought glass. Parts: `barrel`, `retainer`,
+`hood`.
+
+| Item | Qty | Notes |
+|---|---|---|
+| Lens element / achromatic doublet | 1 group | Ø set by `element_d`; measure the edge thickness → `element_edge_thk` |
+| Printed retainer ring | 1 | `part=retainer`, coarse printed thread, clamps the group back against the seat |
+| Printed hood | 0–1 | `part=hood`, threads onto the filter thread or slips over the barrel OD |
+| Black paint / flock liner | a little | kill internal reflections in the bore |
+
+No fasteners. Set `flange_to_rear_vertex` from the lens prescription or bench back-focus;
+fine focus is the camera's shim stack. `spacer` (C↔CS 5 mm ring) stays a camera part.

@@ -31,24 +31,31 @@ cap-head counterbores**. Screw length: front `M3 × 8`, rear `M3 × 12` (rear ca
 toward the sensor and out the back. Every module is authored in these absolute coordinates,
 so `dispatch.scad` can just draw them all together for the assembly view.
 
+> The enclosure modules and this interface live in `scad/lib/camera/`. Truly shared
+> helpers (`constants.scad`, `util.scad`, `hardware.scad`) stay in `scad/lib/` and are
+> included as `../constants.scad` from inside `lib/camera/`.
+
 ## Adding a new module
 
-1. `include <params.scad>; use <interface.scad>; use <util.scad>;`
+1. `include <params.scad>; use <interface.scad>; use <../util.scad>;` (in `scad/lib/camera/`)
 2. Build your solid in absolute Z. Union `corner_ears(h)` and either `reg_boss()` (if you
    mate to a body pocket) or cut `reg_pocket()` (if a boss mates into you).
 3. Cut fasteners with `mate_screws("clear", h)` or `mate_screws("insert-…")`.
-4. Add a `part == "yourthing"` branch in `scad/lib/dispatch.scad`.
-5. `make check` — the asserts and `--hardwarnings` must stay green.
+4. Add a `part == "yourthing"` branch in `scad/lib/camera/dispatch.scad`, and add the part
+   name to `parts` / `check_parts` in `components/_type/camera.toml`.
+5. `make gen && make check` — the asserts and `--hardwarnings` must stay green.
 
 ## Adding a new variant
 
-Copy `scad/variants/generic_29mm_c.scad`, change the overrides (board size, hole pitch,
-mount type/style, gland), add the name to `VARIANTS` in the `Makefile` and to
-`variants.json`. `make <name>` builds it.
+Variants are config-driven. Drop a TOML in `components/camera/` with the overrides (board
+size, hole pitch, mount type/style, gland), run `make gen`, then `make <name>`. The
+`scad/variants/*.scad` stubs and the `Makefile` lists are generated — see
+[components.md](components.md).
 
 ## Parameter override mechanics (important)
 
-`params.scad` uses **plain assignments** so the OpenSCAD Customizer works. A variant file
-therefore does `include <../lib/params.scad>` **first**, then re-assigns the few parameters
-it pins, then `include <../lib/dispatch.scad>`. OpenSCAD's "last assignment wins" rule makes
-the override stick. On the command line, `-D 'name=value'` beats both.
+`params.scad` uses **plain assignments** so the OpenSCAD Customizer works. A generated
+variant stub does `include <../lib/camera/params.scad>` **first**, then re-assigns the few
+parameters the TOML pins, then `include <../lib/camera/dispatch.scad>`. OpenSCAD's "last
+assignment wins" rule makes the override stick. On the command line, `-D 'name=value'`
+beats both.

@@ -2,7 +2,7 @@
 // laid out in a row. They stack between the sensor carrier and the body ledge.
 
 include <params.scad>
-use <util.scad>
+use <../util.scad>
 
 module one_shim(t) {
     linear_extrude(height = t)

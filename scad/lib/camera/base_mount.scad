@@ -3,8 +3,8 @@
 // Hook points (comments) mark where a tilt knuckle / arca rail would attach later.
 
 include <params.scad>
-use <util.scad>
-use <hardware.scad>
+use <../util.scad>
+use <../hardware.scad>
 
 bracket_w = 60;
 bracket_d = 40;

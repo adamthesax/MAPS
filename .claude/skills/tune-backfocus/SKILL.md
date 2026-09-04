@@ -5,7 +5,10 @@ description: Work the mapscam flange-focal-distance stack — given a sensor's P
 
 # Tune back focus
 
-## The model (all in `scad/lib/params.scad`, "computed" section)
+Camera back focus. (For a printed lens barrel it's `flange_to_rear_vertex` in
+`scad/lib/lens/params.scad` — see the `add-lens-body` skill.)
+
+## The model (all in `scad/lib/camera/params.scad`, "computed" section)
 
 ```
 sensor_z       = ffd(mount_type)                       # 17.526 (C) / 12.526 (CS)
@@ -22,7 +25,8 @@ Only `body_length` and `ledge_z` are derived — everything else is a knob.
 1. Get `board_to_sensor_surface` = PCB front face → **sensor active surface** (cover glass
    top). Not the connector height. If the datasheet gives sensor-surface-to-mounting-hole,
    convert.
-2. Set it in the variant file (or `-D`). Run `make check` then `make <variant>`.
+2. Set it in `components/camera/<variant>.toml` (or `-D` for a one-off). Run `make gen`,
+   then `make check`, then `make <variant>`.
 3. Read the echoed `body_length`; that's the part that changed. Reprint the body.
 4. `standoff_h` only needs changing if components on the PCB back would hit the carrier, or
    an `assert()` complains the stack is too short — then lower it.
@@ -31,10 +35,12 @@ Only `body_length` and `ledge_z` are derived — everything else is a knob.
 - Lens hits infinity stop before sharp → sensor too far → **remove** shim (≈ error).
 - Sharp only past infinity → too close → **add** shim, and if out of shim range increase
   `board_to_sensor_surface` understanding and reprint the body.
-- Regenerate the shim sheet after changing `shim_values`: `make <variant>` (part `shims`).
+- Regenerate the shim sheet after changing `shim_values` in the TOML: `make gen` then
+  `make <variant>` (part `shims`).
 - Full procedure for the user: `docs/calibration.md`.
 
 ## Guard rails
 - Keep `shim_nominal` ≥ max single shim so shims can be *removed*, not only added.
 - After any change, `make check` must stay green (the asserts catch impossible stacks).
-- Record the final shim stack in the variant file as a comment and in the user's build log.
+- Record the final shim stack as a comment in `components/camera/<variant>.toml` and in the
+  user's build log.

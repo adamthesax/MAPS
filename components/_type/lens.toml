@@ -1,0 +1,8 @@
+# Component type: printed C/CS lens barrel (holds bought glass elements).
+
+lib         = "scad/lib/lens"
+entry       = "scad/lens.scad"
+params_file = "scad/lib/lens/params.scad"
+parts       = ["barrel", "retainer", "hood"]
+check_parts = ["barrel", "retainer", "hood", "assembly"]
+preview_cam = "0,0,12,68,0,25,240"

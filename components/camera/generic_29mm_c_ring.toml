@@ -1,0 +1,11 @@
+type  = "camera"
+title = "29 mm board, C-mount, captured metal ring"
+
+[params]
+mount_type       = "C"
+lens_mount_style = "ring"
+ring_bore_d      = 25.6   # measure your ring's OD and set this + ~0.1 mm
+ring_depth       = 6.0
+ring_grubs       = 3
+board_x          = 29
+board_y          = 29

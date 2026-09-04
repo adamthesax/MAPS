@@ -1,0 +1,12 @@
+type  = "lens"
+title = "Ø12.7 achromat barrel, C-mount, M30.5 filter"
+
+# Barrel for a bought Ø12.7 mm achromatic doublet (treated as one element group).
+# Set flange_to_rear_vertex from the lens prescription or by measuring back focus.
+[params]
+flange_to_rear_vertex = 8.0
+element_d             = 12.7
+element_edge_thk      = 4.0
+clear_aperture_d      = 10.0
+filter_thread         = "M30.5x0.5"
+hood_style            = "round"
