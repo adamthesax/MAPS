@@ -1,0 +1,37 @@
+name: render
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
+      - name: Check — every variant/part renders clean (--hardwarnings + asserts)
+        run: make check
+
+      - name: Render STLs
+        run: xvfb-run -a make stl
+
+      - name: Render previews
+        run: xvfb-run -a make renders
+
+      - name: Upload parts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mapscam-stl
+          path: |
+            stl/*.stl
+            renders/*.png
+          if-no-files-found: error

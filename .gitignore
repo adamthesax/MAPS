@@ -1,0 +1,19 @@
+# build output
+stl/
+build/
+*.stl
+!docs/**/*.stl
+
+# OpenSCAD
+*.csg
+.openscad-*
+
+# renders are committed selectively; ignore ad-hoc ones
+renders/tmp-*
+renders/*.deps
+
+# OS / editor
+.DS_Store
+*~
+.vscode/
+.idea/
