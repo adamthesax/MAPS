@@ -17,7 +17,7 @@
 include <../constants.scad>
 
 /* [Part selection] */
-part = "assembly"; // [assembly, stem, barrel, lens_retainer, filter_ring]
+part = "assembly"; // [assembly, stem, barrel, clamp, lens_retainer, filter_ring]
 
 /* [Camera-body interface] */
 // Footprint of the mapscam body this flange bolts onto. MUST match that body's
@@ -42,8 +42,15 @@ focus_travel  = 25;   // [5:1:60]  ± adjustment about focus_nominal
 draw_od     = 24;    // [16:0.5:40] stem (draw-tube) outside diameter
 draw_id     = 17;    // [8:0.5:34]  clear bore up the stem
 slide_fit   = 0.35;  // [0.1:0.05:0.8] radial: barrel slide-collar bore vs draw_od
-collar_len  = 30;    // [15:1:60] length of the barrel's close-fit bearing collar
-clamp_gap   = 2.2;   // [1.2:0.2:4] width of the split-clamp saw slots
+collar_len  = 30;    // [15:1:60] length of the barrel's split bearing collar
+
+/* [Focus clamp] */
+// A separate wrap-around split collar squeezes the barrel's slit collet onto the
+// stem (covers the collet slots -> also a light seal). One tangential pinch screw.
+clamp_relief = 2.0;  // [1.2:0.2:4] width of the collet relief slots in the barrel
+clamp_wall   = 3.5;  // [2:0.5:6] wall of the wrap clamp ring
+clamp_screw  = "M4"; // [M3, M4] tangential pinch screw
+clamp_fit    = 0.35; // [0.1:0.05:0.8] radial: clamp bore vs barrel collet OD
 
 /* [808 nm filter] */
 filter_d       = 8.0;   // bandpass filter outside diameter
@@ -90,7 +97,15 @@ pocket_bore   = element_d + 2*element_fit;
 seat_rim_w    = (element_d - clear_aperture_d) / 2;
 barrel_od_c   = (barrel_od > 0) ? barrel_od : element_d + 2*wall + 4;
 barrel_bore   = max(clear_aperture_d + 2, draw_od + 2*slide_fit + 8);
-collar_bore   = draw_od + 2*slide_fit;
+collar_bore   = draw_od + 2*slide_fit;              // barrel collet bore, rides the stem
+collar_od     = collar_bore + 2*wall + 3;           // barrel collet outside diameter
+
+// wrap clamp ring
+clamp_id      = collar_od + clamp_fit;
+clamp_od      = clamp_id + 2*clamp_wall;
+clamp_h       = collar_len - 3;
+clamp_screw_clear = (clamp_screw == "M3") ? 3.4 : 4.4;   // M3 / M4 free-fit
+clamp_nut_af      = (clamp_screw == "M3") ? 5.5 : 7.0;   // hex nut across-flats
 
 // barrel is authored in its own frame: element rear face at z = 0, tube toward +Z.
 barrel_rear_gap = 45;                       // flange face -> barrel rear face, at nominal focus
@@ -132,6 +147,7 @@ echo(str("== mapscam receiver ==  element Ø", element_d, " f", focal_length,
 echo(str("   barrel  Ø", barrel_od_c, " x ", barrel_len,
          " mm   bore Ø", barrel_bore));
 echo(str("   stem    Ø", draw_od, " x ", stem_len, " mm   bore Ø", draw_id,
-         "   collar Ø", collar_bore, " x ", collar_len));
+         "   collet Ø", collar_od, " x ", collar_len));
+echo(str("   clamp   Ø", clamp_od, " x ", clamp_h, " mm   ", clamp_screw, " pinch"));
 echo(str("   flange  ", outer_x, " x ", outer_y, " mm   filter Ø", filter_d,
          "  field stop Ø", filter_clear_d));

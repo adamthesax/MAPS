@@ -4,6 +4,7 @@
 use <../util.scad>
 use <stem.scad>
 use <barrel.scad>
+use <clamp.scad>
 use <retainer.scad>
 
 module element_ghost() {
@@ -15,6 +16,7 @@ module element_ghost() {
 
 if      (part == "stem")          stem();
 else if (part == "barrel")        barrel();
+else if (part == "clamp")         clamp();
 else if (part == "lens_retainer") lens_retainer();
 else if (part == "filter_ring")   filter_ring();
 else {
@@ -31,6 +33,10 @@ else {
         translate([0, 0, -(element_edge_thk + retainer_thk) - explode * 0.7])
             lens_retainer();
     }
+
+    // wrap clamp over the collet (slides on from the rear)
+    translate([0, 0, -(focus_nominal - barrel_len) - clamp_h - explode * 1.35])
+        clamp();
 
     // filter + its ring, floated out of the stem toward +Z
     % translate([0, 0, filter_z0 + explode * 0.5]) cylinder(h = filter_thk, d = filter_d);

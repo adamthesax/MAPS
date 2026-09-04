@@ -1,5 +1,6 @@
-// mapscam receiver — barrel: holds the Ø80 optic at the front, telescopes over
-// the stem draw tube at the rear, and carries the split clamp that locks focus.
+// mapscam receiver — barrel: holds the Ø80 optic at the front, telescopes over the
+// stem draw tube at the rear. The rear collar is a slit collet; the separate
+// `clamp` ring squeezes it onto the stem to lock focus.
 //
 // Authored in its own frame: z = 0 is the optic's rear (flat) face, +Z runs back
 // toward the body, the optic and its retainer sit at -Z. `dispatch.scad` slides the
@@ -9,30 +10,22 @@ include <params.scad>
 use <../util.scad>
 use <../hardware.scad>
 
-collar_od  = collar_bore + 2*wall + 8;      // stepped-down rear that rides the stem
-taper_len  = 12;                            // blend from barrel OD down to the collar
-clamp_ear  = [9, 7, 16];                    // one pinch lug: [radial, tangential, axial]
-cell_h     = element_edge_thk + retainer_thk + front_rim;
+taper_len = 12;                            // blend from barrel OD down to the collet
+cell_h    = element_edge_thk + retainer_thk + front_rim;
 
 module barrel() {
     collar_z0 = barrel_len - collar_len;
-    slot_z0   = collar_z0 - taper_len - 4;      // slots run from here to the rear face
+    slot_z0   = collar_z0 + 4;             // collet slots: stay joined at the base
 
     difference() {
         union() {
             // lens cell + main tube
             translate([0, 0, -cell_h]) cylinder(h = cell_h + collar_z0 - taper_len, d = barrel_od_c);
-            // taper down to the slide collar
+            // taper down to the collet
             translate([0, 0, collar_z0 - taper_len])
                 cylinder(h = taper_len, d1 = barrel_od_c, d2 = collar_od);
-            // the slide collar
+            // the collet
             translate([0, 0, collar_z0]) cylinder(h = collar_len, d = collar_od);
-            // one solid clamp block fused to the collar; the slot below splits it
-            // into two pinch lugs (cut faces are internal -> stays 2-manifold).
-            translate([0, -(clamp_gap/2 + clamp_ear[1]), barrel_len - clamp_ear[2]])
-                cube([collar_od/2 + clamp_ear[0],
-                      2*(clamp_gap/2 + clamp_ear[1]),
-                      clamp_ear[2]]);
         }
 
         // ---- optical path -------------------------------------------------
@@ -48,10 +41,10 @@ module barrel() {
         // main bore behind the element, up to where the outer wall starts tapering
         translate([0, 0, -0.01])
             cylinder(h = collar_z0 - taper_len + 0.02, d = barrel_bore);
-        // taper the bore in to meet the collar bore (stays inside the outer taper)
+        // taper the bore in to meet the collet bore (stays inside the outer taper)
         translate([0, 0, collar_z0 - taper_len - 0.01])
             cylinder(h = taper_len + 0.02, d1 = barrel_bore, d2 = collar_bore);
-        // close-fit slide collar + lead-in chamfer
+        // close-fit collet bore + lead-in chamfer
         translate([0, 0, collar_z0 - 0.01])
             cylinder(h = collar_len + 0.02, d = collar_bore);
         translate([0, 0, barrel_len - 2.5])
@@ -64,19 +57,11 @@ module barrel() {
                     rotate([0, 90, 0])
                         cylinder(h = barrel_od_c, d = M3_TAP);
 
-        // ---- split clamp: ONE +X slot; the collar becomes a C and flexes shut,
-        //      and the same cut divides the clamp block into two lugs
-        translate([-1, -clamp_gap/2, slot_z0])
-            cube([collar_od/2 + clamp_ear[0] + 2, clamp_gap, barrel_len - slot_z0 + 1]);
-        // pinch screw: clearance through both lugs, hex nut trap on -Y
-        scr_x = collar_od/2 - 2 + clamp_ear[0]/2;
-        scr_z = barrel_len - clamp_ear[2]/2;
-        translate([scr_x, clamp_gap/2 + clamp_ear[1] + 1, scr_z])
-            rotate([90, 0, 0])
-                cylinder(h = 2*clamp_ear[1] + clamp_gap + 3, d = M3_CLEAR, center = true);
-        translate([scr_x, -(clamp_gap/2 + clamp_ear[1]) + 1.4, scr_z])
-            rotate([90, 0, 0])
-                cylinder(h = 3.2, d = 6.4, $fn = 6);
+        // ---- collet relief: 3 axial slots, open at the rear face, joined at base
+        for (a = [0, 120, 240])
+            rotate([0, 0, a])
+                translate([collar_bore/2 - 1, -clamp_relief/2, slot_z0])
+                    cube([collar_od, clamp_relief, barrel_len - slot_z0 + 1]);
     }
 }
 
