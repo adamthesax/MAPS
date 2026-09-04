@@ -1,11 +1,10 @@
 // mapscam receiver — the two clamp rings.
 //   lens_retainer : plain ring, drops into the barrel ahead of the Ø80 optic and
 //                   is held by the barrel's 3 radial M3 set screws (groove in OD).
-//   filter_ring   : small threaded ring, clamps the 808 nm filter in the stem.
+//   filter_ring   : small threaded ring, clamps the 808 nm filter in the flange.
 
 include <params.scad>
-include <BOSL2/std.scad>
-include <BOSL2/threading.scad>
+include <helix.scad>
 use <../util.scad>
 
 module lens_retainer() {
@@ -28,14 +27,16 @@ module lens_retainer() {
 module filter_ring() {
     ring_h = fring_engage + 2.5;
     difference() {
-        translate([0, 0, ring_h/2])
-            threaded_rod(d = fring_d, l = ring_h, pitch = fring_pitch,
-                         internal = false, $fn = 64);
+        union() {
+            helix_male(fring_d, fring_engage, fring_pitch, depth = 0.9);
+            translate([0, 0, fring_engage])
+                cylinder(h = ring_h - fring_engage, d = fring_d + 1.5);   // finger grip lip
+        }
         translate([0, 0, -0.01])
-            cylinder(h = ring_h + 0.02, d = filter_clear_d);
+            cylinder(h = ring_h + 0.02, d = filter_clear_d, $fn = 48);
         // slot for a small flat screwdriver (assembled from the body-cavity side)
         translate([0, 0, ring_h - 1.0])
-            cube([fring_d + 2, 1.6, 2.2], center = true);
+            cube([fring_d + 3, 1.6, 2.2], center = true);
     }
 }
 

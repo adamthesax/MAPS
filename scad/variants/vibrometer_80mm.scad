@@ -7,6 +7,7 @@ clear_aperture_d = 74;
 focal_length = 150;
 focus_nominal = 150;
 focus_travel = 25;
+fine_travel = 6;
 draw_od = 24;
 draw_id = 17;
 filter_d = 8.0;

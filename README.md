@@ -61,7 +61,7 @@ not hand-edit them. See [docs/components.md](docs/components.md).
 
 | Variant | Description |
 |---|---|
-| `vibrometer_80mm` | Ø80 f150 receiver, draw-tube focus, 808 nm filter, 39 mm body |
+| `vibrometer_80mm` | Ø80 f150 receiver, coarse draw-tube + fine helicoid, 808 nm filter, 39 mm body |
 <!-- END GENERATED:components -->
 
 Add your own: drop a TOML in `components/camera/` or `components/lens/`, run `make gen`,

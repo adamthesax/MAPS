@@ -41,6 +41,7 @@
       "lib": "scad/lib/receiver",
       "entry": "scad/receiver.scad",
       "parts": [
+        "flange",
         "stem",
         "barrel",
         "clamp",
@@ -48,6 +49,7 @@
         "filter_ring"
       ],
       "check_parts": [
+        "flange",
         "stem",
         "barrel",
         "clamp",
@@ -112,13 +114,14 @@
     {
       "name": "vibrometer_80mm",
       "type": "receiver",
-      "title": "Ø80 f150 receiver, draw-tube focus, 808 nm filter, 39 mm body",
+      "title": "Ø80 f150 receiver, coarse draw-tube + fine helicoid, 808 nm filter, 39 mm body",
       "params": {
         "element_d": 80,
         "clear_aperture_d": 74,
         "focal_length": 150,
         "focus_nominal": 150,
         "focus_travel": 25,
+        "fine_travel": 6,
         "draw_od": 24,
         "draw_id": 17,
         "filter_d": 8.0,
