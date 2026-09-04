@@ -62,11 +62,40 @@ not hand-edit them. See [docs/components.md](docs/components.md).
 | Variant | Description |
 |---|---|
 | `vibrometer_80mm` | Ø80 f150 receiver, fixed focus, 808 nm filter, 39 mm body |
+
+### Vibrometer components
+
+| Variant | Description |
+|---|---|
+| `vibrometer_smi_650` | Laser vibrometer — Phase 1 self-mixing, 650 nm (stock body + laser_board) |
 <!-- END GENERATED:components -->
 
 Add your own: drop a TOML in `components/camera/` or `components/lens/`, run `make gen`,
 then `make check`. See [docs/components.md](docs/components.md) and the `add-camera-variant`
 / `add-lens-body` skills.
+
+## Instrument #2 — laser vibrometer
+
+M.A.P.S. also hosts a **BPW34 laser vibrometer** — and it is **the same enclosure as a
+camera**. The `vibrometer` component reuses the stock `front` / `body` / `carrier` / `rear`
+/ `base` / `shims` parts unchanged; the only thing that changes is the "sensor board": a
+printed **`laser_board`** (`part = "laser_board"`) bolts to the carrier standoffs exactly
+where a CMOS PCB would, carrying a collimated 650 nm self-mixing laser + a BPW34 pick-off
+that fires forward through the front-plate bore. Its `params.scad` includes the camera's
+and pins the same nominal stack, so `body_length` derives to the **identical 26.626 mm** as
+`generic_29mm_c`. Pair it with the `vibrometer_80mm` receiver optic for the return path.
+
+```bash
+make vibrometer_smi_650                 # front·body·carrier·laser_board·rear·base·shims
+cd sw/vibrometer && pip install -r requirements.txt && python test_pipeline.py   # hardware-free
+```
+
+Roadmap: Phase 0 speckle → **Phase 1 self-mixing (λ/2 = 325 nm per fringe, velocity from
+the Doppler fringe rate)** → Phase 2 Michelson homodyne (sketched). Electronics in
+[`elec/`](elec/), acquisition + analysis in [`sw/`](sw/), full write-up in
+[`docs/vibrometer/`](docs/vibrometer/) starting with
+[`docs/vibrometer/plan.md`](docs/vibrometer/plan.md). **Class 3R laser** — see the safety
+notes in [`docs/vibrometer/design-notes.md`](docs/vibrometer/design-notes.md).
 
 ## The idea in one table
 
@@ -100,9 +129,15 @@ scad/
     camera/            params · dispatch · interface · front_plate · body ·
                        sensor_carrier · rear_plate · base_mount · shims · c_mount
     lens/              params · dispatch · barrel · retainer · hood
+    receiver/          params · dispatch · stem · barrel · retainer
+    vibrometer/        params (includes camera/params) · dispatch (reuses camera parts) ·
+                       laser_board · vib_optics_mounts (Phase-2 sketch)
   variants/            GENERATED stubs (committed) — do not hand-edit
 components.json         GENERATED manifest (committed)
 docs/                  components, design notes, modularity, BOM, print, assembly, calibration
+  vibrometer/          instrument #2: plan, design notes, electronics, BOM, assembly, calibration
+elec/                  vibrometer electronics — BPW34 AFE + 650 nm laser driver
+sw/                    vibrometer acquisition + analysis (Python); sw/firmware/ = Teensy/RP2040 DAQ
 vendor/BOSL2/          threading & helpers (git submodule)
 ```
 
