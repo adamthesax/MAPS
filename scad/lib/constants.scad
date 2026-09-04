@@ -36,3 +36,14 @@ function gland_hole_d(g) =
     (g == "PG11") ? 18.6 :
     (g == "PG7")  ? 12.5 :
     0;   // "none"
+
+// ---------------------------------------------------------------------------
+// Front filter threads (CCTV / photo accessory sizes). [major_d, pitch] in mm.
+// "none" -> [0, 0]. Printed at real pitch; FDM accuracy is marginal at 0.5 mm.
+// ---------------------------------------------------------------------------
+function filter_thread_spec(name) =
+    (name == "M25.5x0.5") ? [25.5, 0.5] :
+    (name == "M30.5x0.5") ? [30.5, 0.5] :
+    (name == "M37.5x0.5") ? [37.5, 0.5] :
+    (name == "M40.5x0.5") ? [40.5, 0.5] :
+    [0, 0];   // "none"

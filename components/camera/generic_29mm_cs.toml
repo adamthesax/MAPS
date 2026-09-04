@@ -1,0 +1,8 @@
+type  = "camera"
+title = "29 mm board, CS-mount, printed thread"
+
+[params]
+mount_type       = "CS"
+lens_mount_style = "thread"
+board_x          = 29
+board_y          = 29

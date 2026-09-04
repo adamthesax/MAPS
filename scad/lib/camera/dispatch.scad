@@ -1,7 +1,7 @@
 // mapscam — part dispatch. Included after params (or after params + overrides).
 // Renders the single part named by `part`, or the exploded assembly preview.
 
-use <util.scad>
+use <../util.scad>
 use <front_plate.scad>
 use <body.scad>
 use <sensor_carrier.scad>

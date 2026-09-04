@@ -5,8 +5,8 @@
 // any body pairs with any rear. Assembly is keyed by a chamfered index notch on +X.
 
 include <params.scad>
-use <util.scad>
-use <hardware.scad>
+use <../util.scad>
+use <../hardware.scad>
 
 ear_d = 7;   // corner screw-boss diameter
 

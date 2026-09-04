@@ -3,8 +3,8 @@
 include <params.scad>
 use <interface.scad>
 use <c_mount.scad>
-use <util.scad>
-use <hardware.scad>
+use <../util.scad>
+use <../hardware.scad>
 
 module front_plate() {
     difference() {

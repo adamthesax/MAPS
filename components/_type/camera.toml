@@ -1,0 +1,9 @@
+# Component type: camera enclosure.
+# Type defs are hand-edited. `tools/gen.py` reads them to wire up the build.
+
+lib         = "scad/lib/camera"
+entry       = "scad/camera.scad"                  # OpenSCAD Customizer target for this type
+params_file = "scad/lib/camera/params.scad"       # generator validates [params] keys against this
+parts       = ["front", "body", "carrier", "rear", "base", "shims"]
+check_parts = ["front", "body", "carrier", "rear", "base", "shims", "assembly"]
+preview_cam = "0,0,18,62,0,23,235"                # --camera=<...> for the preview PNG

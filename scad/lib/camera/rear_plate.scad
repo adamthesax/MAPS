@@ -3,8 +3,8 @@
 
 include <params.scad>
 use <interface.scad>
-use <util.scad>
-use <hardware.scad>
+use <../util.scad>
+use <../hardware.scad>
 
 rear_thk = tripod_insert ? 12 : 6;   // thick enough to take a side 1/4"-20 insert
 

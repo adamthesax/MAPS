@@ -2,7 +2,7 @@
 // Annotations in `// [ ... ]` comments make these sliders in the OpenSCAD Customizer.
 // Anything DERIVED from these values lives at the bottom under "computed".
 
-include <constants.scad>
+include <../constants.scad>
 
 /* [Part selection] */
 // Which piece to render / export.

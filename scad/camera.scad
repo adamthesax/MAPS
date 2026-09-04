@@ -10,5 +10,5 @@
 // For a whole named build (specific board size, mount type, ...) see
 // scad/variants/*.scad and `make`.
 
-include <lib/params.scad>
-include <lib/dispatch.scad>
+include <lib/camera/params.scad>
+include <lib/camera/dispatch.scad>

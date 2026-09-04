@@ -72,6 +72,44 @@ Fine adjustment beyond that = focus ring on the lens.
 | Print time | slow (~1 min/part, big STL) | fast |
 | Notes | print front plate thread-axis vertical | set `ring_bore_d` to measured OD + ~0.1 mm |
 
+## Lens bodies
+
+`mapscam` also prints **lens barrels** — a holder for bought glass (a singlet, an
+achromatic doublet, a salvaged element group) with a male C/CS thread on the back. It is a
+separate component *type* (`components/lens/*.toml`, `scad/lib/lens/`), not a camera
+variant, because nothing about the sensor stack applies.
+
+Coordinate convention mirrors the camera: **`z = 0` is the flange face** (the shoulder that
+seats against the camera front plate), **+Z points toward the front of the lens**, and the
+male 1"-32 thread runs `z = -thread_engage … 0` (into the camera).
+
+### The lens stack (enforced in `scad/lib/lens/params.scad`)
+
+```
+seat_z       = flange_to_rear_vertex               // rear face of the element group, from z=0
+group_thk    = element_count·element_edge_thk + (element_count−1)·element_gap
+front_elem_z = seat_z + group_thk
+retainer_z0  = front_elem_z                         // coarse printed thread clamps the group back
+barrel_front_z = retainer_z0 + retainer_engage + front_rim
+total_track  = barrel_front_z + thread_engage
+```
+
+`assert()`s fail the render if the rear vertex lands inside the male thread, if
+`clear_aperture_d` leaves no seat rim, if the barrel wall is too thin around the retainer
+thread, or if a chosen `filter_thread` has no wall over the aperture.
+
+`flange_to_rear_vertex` is the lens equivalent of the camera's `board_to_sensor_surface`:
+get it from the element prescription, or measure back focus on the bench and adjust. Fine
+focus is still the camera's shim stack plus (for a real lens) the focus ring.
+
+### Limitations
+
+- Fixed focus — no printed helicoid yet. A moving `focus_ring` group is a planned follow-up.
+- The retainer thread is a coarse (1 mm pitch) printed thread; the optional front
+  `filter_thread` is modelled at true 0.5 mm pitch and prints marginally on FDM, same
+  caveat as the printed C-mount thread.
+- No baffles / internal blackening geometry; paint the bore or add a flock liner.
+
 ## Known limitations of v0.1
 
 - Sensor tilt (non-perpendicularity) is controlled only by print flatness of the ledge and

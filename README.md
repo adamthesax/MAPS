@@ -20,7 +20,8 @@ Parametric [OpenSCAD](https://openscad.org) source. Mechanical + docs only — n
 git clone --recurse-submodules <this repo>
 cd mapscam
 brew install openscad          # or apt / your package manager
-make check                     # render every variant/part, fail on any warning
+python3 --version              # 3.11+ (needed by tools/gen.py — stdlib only)
+make check                     # regen check + render every component/part, fail on any warning
 make                           # STLs + preview PNGs into stl/ and renders/
 ```
 
@@ -30,19 +31,36 @@ Render a single part:
 OPENSCADPATH=vendor openscad -o stl/body.stl -D 'part="body"' scad/variants/generic_29mm_c.scad
 ```
 
-Or open `scad/camera.scad` in the OpenSCAD GUI and use the **Customizer**.
+Or open `scad/camera.scad` (or `scad/lens.scad`) in the OpenSCAD GUI and use the
+**Customizer**.
 
-## Variants
+## Components
 
-| Name | Board | Lens mount | Body length |
-|---|---|---|---|
-| `generic_29mm_c` | 29 × 29 mm | C, printed 1"-32 thread | 26.6 mm |
-| `generic_29mm_c_ring` | 29 × 29 mm | C, captured metal ring | 26.6 mm |
-| `generic_29mm_cs` | 29 × 29 mm | CS, printed thread | 21.6 mm |
+Every buildable thing — a camera enclosure, a printed lens barrel — is one small TOML file
+under [`components/`](components/). `tools/gen.py` (run by `make gen`, and automatically by
+`make`) expands each into a `scad/variants/<name>.scad` stub plus the Make wiring. **The
+TOML is the source of truth**; the `.scad` stubs and `components.json` are generated — do
+not hand-edit them. See [docs/components.md](docs/components.md).
 
-Add your own: copy `scad/variants/generic_29mm_c.scad`, edit the overrides, add it to
-`VARIANTS` in the `Makefile` and to `variants.json`. See
-[docs/modularity.md](docs/modularity.md).
+<!-- BEGIN GENERATED:components -->
+### Camera components
+
+| Variant | Description |
+|---|---|
+| `generic_29mm_c` | 29 mm board, C-mount, printed thread |
+| `generic_29mm_c_ring` | 29 mm board, C-mount, captured metal ring |
+| `generic_29mm_cs` | 29 mm board, CS-mount, printed thread |
+
+### Lens components
+
+| Variant | Description |
+|---|---|
+| `achromat_12mm_c` | Ø12.7 achromat barrel, C-mount, M30.5 filter |
+<!-- END GENERATED:components -->
+
+Add your own: drop a TOML in `components/camera/` or `components/lens/`, run `make gen`,
+then `make check`. See [docs/components.md](docs/components.md) and the `add-camera-variant`
+/ `add-lens-body` skills.
 
 ## The idea in one table
 
@@ -51,9 +69,9 @@ Add your own: copy `scad/variants/generic_29mm_c.scad`, edit the overrides, add 
 | Thread | 1.000"-32 UN | 1.000"-32 UN |
 | Flange focal distance (flange → sensor) | **17.526 mm** | **12.526 mm** |
 
-`scad/lib/params.scad` does **not** let you set the body length — it *solves* it from that
-flange focal distance, your sensor's PCB-to-active-surface number, standoff height, and a
-shim allowance, then `assert()`s the stack is physically possible. A printable shim set
+`scad/lib/camera/params.scad` does **not** let you set the body length — it *solves* it from
+that flange focal distance, your sensor's PCB-to-active-surface number, standoff height, and
+a shim allowance, then `assert()`s the stack is physically possible. A printable shim set
 (`part = "shims"`) takes up the ± tolerance for back focus.
 
 ## Print checklist (per camera)
@@ -65,26 +83,28 @@ Material and orientation: [docs/print-settings.md](docs/print-settings.md).
 ## Repo layout
 
 ```
+components/            SOURCE OF TRUTH — one TOML per component (+ _type/ defs)
+tools/gen.py           expands components/*.toml -> variant stubs + build wiring
 scad/
-  camera.scad          Customizer entry point
+  camera.scad          Customizer entry point (camera type)
+  lens.scad            Customizer entry point (lens type)
   lib/
-    constants.scad     C/CS optics, thread spec, fastener dims
-    params.scad        every tunable + the derived stack budget + asserts
-    interface.scad     the shared inter-module register & bolt pattern
-    c_mount.scad       printed thread OR captured-ring interface
-    front_plate.scad  body.scad  sensor_carrier.scad  rear_plate.scad
-    base_mount.scad    shims.scad
-    dispatch.scad      part selector
-  variants/            named builds
-docs/                  design notes, modularity, BOM, print, assembly, calibration
+    constants.scad     shared: C/CS optics, thread spec, fastener dims, filter threads
+    util.scad  hardware.scad         shared helpers
+    camera/            params · dispatch · interface · front_plate · body ·
+                       sensor_carrier · rear_plate · base_mount · shims · c_mount
+    lens/              params · dispatch · barrel · retainer · hood
+  variants/            GENERATED stubs (committed) — do not hand-edit
+components.json         GENERATED manifest (committed)
+docs/                  components, design notes, modularity, BOM, print, assembly, calibration
 vendor/BOSL2/          threading & helpers (git submodule)
 ```
 
 ## Skills
 
 `.claude/skills/` holds repo-specific [Claude Code](https://claude.com/claude-code) skills
-for common jobs — adding a sensor variant, rendering/QC, print prep, tuning back focus.
-See [.claude/skills/README.md](.claude/skills/README.md).
+for common jobs — adding a camera variant or a lens body, rendering/QC, print prep, tuning
+back focus. See [.claude/skills/README.md](.claude/skills/README.md).
 
 ## Licence
 

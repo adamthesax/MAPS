@@ -3,8 +3,8 @@
 
 include <params.scad>
 use <interface.scad>
-use <util.scad>
-use <hardware.scad>
+use <../util.scad>
+use <../hardware.scad>
 
 module body() {
     fz = front_mate_z;

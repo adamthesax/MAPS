@@ -19,16 +19,21 @@ convention that a new module must honour.
   the shift explicit via a parameter and update the `body_length` derivation, or place the
   module *outside* the optical stack (in front of the flange, or behind the rear cap).
 
+These are camera-enclosure modules — they live in `scad/lib/camera/`. Shared helpers
+(`constants.scad`, `util.scad`, `hardware.scad`) stay in `scad/lib/`.
+
 ## Steps
-1. New file `scad/lib/<module>.scad`: `include <params.scad>; use <interface.scad>;
-   use <util.scad>; use <hardware.scad>;` then `module <module>() { … }` and a bare
+1. New file `scad/lib/camera/<module>.scad`: `include <params.scad>; use <interface.scad>;
+   use <../util.scad>; use <../hardware.scad>;` then `module <module>() { … }` and a bare
    `<module>();` call at the end.
-2. Add any new knobs to `scad/lib/params.scad` (plain assignment, Customizer annotation).
-   If it changes the optical stack, extend the "computed" section and the `assert()`s.
-3. `use <<module>.scad>` + a `part == "<module>"` branch in `scad/lib/dispatch.scad`, and
-   place it in the exploded `assembly` preview.
-4. `make check`, then render and read the PNG.
-5. Update `docs/modularity.md` (module list), `docs/bom.md`, `README.md` layout.
+2. Add any new knobs to `scad/lib/camera/params.scad` (plain assignment, Customizer
+   annotation). If it changes the optical stack, extend the "computed" section and the
+   `assert()`s.
+3. `use <<module>.scad>` + a `part == "<module>"` branch in `scad/lib/camera/dispatch.scad`,
+   and place it in the exploded `assembly` preview.
+4. Add `<module>` to `parts` / `check_parts` in `components/_type/camera.toml`.
+5. `make gen && make check`, then render and read the PNG.
+6. Update `docs/modularity.md` (module list), `docs/bom.md`, `README.md` layout.
 
 ## Test
 `OPENSCADPATH=vendor openscad -o stl/x.stl -D 'part="<module>"' scad/camera.scad` — must be

@@ -10,7 +10,7 @@
 include <params.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
-use <hardware.scad>
+use <../hardware.scad>
 
 // Optical through-hole along Z.
 module lens_bore(len = 60) {
