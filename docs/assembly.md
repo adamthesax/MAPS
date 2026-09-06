@@ -7,6 +7,8 @@ Tools: soldering iron with heat-set tip, 1.5/2 mm hex drivers, tweezers, caliper
 - Body: 8 × M3 inserts (4 each end), flush and square.
 - Carrier: 4 × M2 inserts in the standoff tops.
 - Rear cap: 1 × 1/4"-20 insert in the edge boss.
+- Wall bracket (optional): 1 × 1/4"-20 insert in the central boss, pressed in from the
+  boss (top) side; the Ø4 hole behind it is a vent, not a through-clearance.
 
 ## 2. Sensor carrier
 
@@ -44,4 +46,6 @@ Thread the C-mount lens in. Then follow [calibration.md](calibration.md) to set 
 ## 7. Mount
 
 - Tripod / CCTV arm: 1/4"-20 in the rear-cap edge.
-- Wall / ceiling: print `base`, screw it to the surface, thread the camera onto its stud.
+- Wall / ceiling: print `base`, heat-set a 1/4"-20 insert in its boss, screw the plate flat
+  to the surface (screw heads countersink into the boss face), then thread a 1/4"-20 stud
+  into the insert and the camera's rear-cap 1/4"-20 onto the stud.

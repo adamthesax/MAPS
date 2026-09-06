@@ -20,7 +20,7 @@ Per camera, `generic_29mm_c` baseline. Quantities scale with your board.
 |---|---|---|
 | Heat-set insert, M3 × L5 (OD ≈ 4.0) | 8 | body: 4 front + 4 rear |
 | Heat-set insert, M2 × L4 (OD ≈ 3.2) | 4 | carrier standoffs (PCB screws) |
-| Heat-set insert, 1/4"-20 (OD ≈ 8.0, L10) | 1 | rear cap edge (tripod) |
+| Heat-set insert, 1/4"-20 (OD ≈ 8.0, L10) | 1–2 | rear cap edge (tripod); +1 in the `base` boss if wall-mounting |
 | Cap screw, M3 × 8 | 4 | front plate → body |
 | Cap screw, M3 × 12 | 4 | rear cap → body |
 | Screw, M2 × (6–8, per standoff+PCB) | 4 | PCB → carrier |

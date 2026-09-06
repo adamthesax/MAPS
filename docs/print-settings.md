@@ -30,7 +30,7 @@
 | `carrier` | floor down, standoffs up | |
 | `rear` | outside face down | gland hole bridges; fine |
 | `shims` | flat | print one sheet; they're fragile — handle with tweezers |
-| `base` | flat, countersinks up | |
+| `base` | plate flat on the bed, boss + countersinks up | boss prints unsupported; the pocket floor bridges its Ø4 vent fine |
 
 ## Post-processing
 
