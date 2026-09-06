@@ -9,16 +9,17 @@ title = "Ø80 f150 receiver, fixed focus, 808 nm filter, 39 mm body"
 # rear of `barrel` (holds the optic) and is pinned with 3 screws. Focus control is a
 # later pass — most likely by moving the element inside the barrel.
 #
-# GUESSED — measure the real optic and filter and update:
+# GUESSED — measure the real optic and update:
 #   element_edge_thk  rim thickness of the Ø80 optic (seat depth)
 #   element_sag       how far the convex face bulges past the rim
-#   filter_thk        thickness of the 8 mm filter
+# Filter is spec'd: 808 nm narrow BP, Ø8.0 x 0.55 mm glass, CWL 808+/-2, HBW 25 nm.
 [params]
 element_d        = 80
 clear_aperture_d = 74
 focal_length     = 150
 flange_to_optic  = 150
 filter_d         = 8.0
+filter_thk       = 0.55
 filter_clear_d   = 6.0
 body_outer_x     = 39
 body_outer_y     = 39

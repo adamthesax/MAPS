@@ -25,17 +25,24 @@ module lens_retainer() {
     }
 }
 
+// Top-hat: a Ø nose drops through the retainer thread onto the filter and holds it
+// against the seat; the threaded body engages the stem's fring thread above.
+// Authored z = 0 at the nose tip (which rests on the filter back face).
 module filter_ring() {
-    ring_h = fring_engage + 2.5;
+    nose_d   = filter_pocket_d - 0.5;          // slides in the Ø8.6 pocket
+    body_h   = fring_engage + 2.5;
     difference() {
-        translate([0, 0, ring_h/2])
-            threaded_rod(d = fring_d, l = ring_h, pitch = fring_pitch,
-                         internal = false, $fn = 48);
-        translate([0, 0, -0.01])
-            cylinder(h = ring_h + 0.02, d = filter_clear_d, $fn = 40);
-        // slot for a small flat screwdriver (assembled from the body-cavity side)
-        translate([0, 0, ring_h - 1.0])
-            cube([fring_d + 3, 1.6, 2.2], center = true);
+        union() {
+            cylinder(h = fring_nose_h + 0.2, d = nose_d, $fn = 40);
+            translate([0, 0, fring_nose_h + body_h/2])
+                threaded_rod(d = fring_d, l = body_h, pitch = fring_pitch,
+                             internal = false, $fn = 48);
+        }
+        translate([0, 0, -1])
+            cylinder(h = fring_nose_h + body_h + 2, d = filter_clear_d, $fn = 40);
+        // slot for a small flat screwdriver (turned from the body-cavity side)
+        translate([0, 0, fring_nose_h + body_h - 1.0])
+            cube([fring_d + 3, 1.8, 2.4], center = true);
     }
 }
 

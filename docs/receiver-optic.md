@@ -62,10 +62,26 @@ is too short for the barrel.
 
 | Part | Prints | Notes |
 |---|---|---|
-| `stem` | 1 | body interface + filter cell + Ø28 neck. Print flange-down; no support. |
+| `stem` | 1 | body interface + filter cell (Ø24 boss into the body) + Ø28 neck. Print flange-down; no support. |
 | `barrel` | 1 | Ø90 × ~145 mm; optic cell + tube + rear socket. Print optic-end-down. Big — budget time / filament. |
 | `lens_retainer` | 1 | plain ring, held by the barrel's 3 radial M3 set screws. |
-| `filter_ring` | 1 | threaded ring, clamps the filter from the body-cavity side. |
+| `filter_ring` | 1 | top-hat: a Ø8.1 nose drops onto the filter, the threaded body engages the stem. Turn from the body side. |
+
+## 808 nm filter cell
+
+The filter is **Ø8.0 × 0.55 mm glass** (808 nm narrow band-pass, CWL 808 ± 2 nm,
+HBW 25 nm, T > 85 %). It drops into a Ø8.6 pocket from the body-cavity side and
+seats front-face-down on the **Ø6 field stop shoulder** (`filter_clear_d`, which is
+also the FOV stop). The **`filter_ring`** is a top hat: its Ø8.1 nose reaches down
+through the Ø17 retainer thread onto the filter's rim and holds it against the seat
+(~2.5 mm thread engagement — it is a zero-load retainer, not a clamp); its bore is
+the Ø6 clear aperture. Assemble the whole cell before bolting the stem to the body;
+a flat screwdriver in the ring's top slot turns it.
+
+The cell lives in a **Ø`filter_boss_d` (24 mm) boss** on the body side of the flange,
+projecting ~7 mm into the body cavity — check it clears your AFE PCB / carrier ledge.
+At ~150 mm from a Ø74 aperture the marginal ray hits the filter at ≤ 14°, a ~2.5 nm
+passband shift against a 25 nm half-width — negligible.
 
 Fasteners: 3 × M3 (stem↔barrel joint, tapped into the socket wall); 3 × M3 set
 screws (lens retainer); 4 × M3 into the body inserts (flange).
@@ -74,10 +90,10 @@ screws (lens retainer); 4 × M3 into the body inserts (flange).
 
 - `element_edge_thk` — rim thickness of the Ø80 optic (= seat pocket depth).
 - `element_sag` — how far the convex face bulges past the rim plane.
-- `filter_thk` — thickness of the 8 mm filter.
 
-`focal_length` / `flange_to_optic` are set from the optic spec; if the real optic is
-not exactly f = 150 mm, set `flange_to_optic` to its actual back focus.
+The filter is spec'd (Ø8.0 × 0.55 mm). `focal_length` / `flange_to_optic` are set
+from the optic spec; if the real optic is not exactly f = 150 mm, set
+`flange_to_optic` to its actual back focus.
 
 ## Known limitations (v0 — nothing fit-tested)
 

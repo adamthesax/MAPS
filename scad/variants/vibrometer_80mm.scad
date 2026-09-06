@@ -7,6 +7,7 @@ clear_aperture_d = 74;
 focal_length = 150;
 flange_to_optic = 150;
 filter_d = 8.0;
+filter_thk = 0.55;
 filter_clear_d = 6.0;
 body_outer_x = 39;
 body_outer_y = 39;

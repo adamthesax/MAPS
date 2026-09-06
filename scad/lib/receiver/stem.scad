@@ -38,27 +38,32 @@ module stem() {
             rprism(outer_x, outer_y, flange_thk, r = corner_r);
             vr_corner_ears(flange_thk);
             translate([0, 0, flange_thk]) vr_reg_boss();
+            // filter-cell boss, projecting into the body cavity (+Z)
+            translate([0, 0, flange_thk - 0.01])
+                cylinder(h = filter_boss_h + 0.01, d = filter_boss_d);
             // rigid neck, hanging toward -Z (its front join_len is the barrel plug)
             translate([0, 0, stem_end_z]) cylinder(h = -stem_end_z, d = neck_od);
             // fillet where the neck meets the flange
             translate([0, 0, -wall]) cylinder(h = wall, d1 = neck_od, d2 = neck_od + 2*wall);
         }
 
-        // clear bore up the neck to the field stop
+        // --- axial optical path: -Z (target) up to +Z (body / detector) ---
+        // wide neck bore, up to the field stop
         translate([0, 0, stem_end_z - 1])
-            cylinder(h = -stem_end_z + 1 + fs_z0 + 0.01, d = neck_bore);
+            cylinder(h = fs_z0 - stem_end_z + 1, d = neck_bore, $fn = 48);
+        // field stop (Ø6) — overlaps the neck bore below; ends at the seat shoulder
+        translate([0, 0, fs_z0 - 0.6])
+            cylinder(h = (fs_z1 - fs_z0) + 0.6, d = filter_clear_d, $fn = 48);
+        // Ø8.6 filter pocket + clearance bore, all the way out the boss top
+        translate([0, 0, fs_z1])
+            cylinder(h = flange_thk + filter_boss_h - fs_z1 + 1, d = filter_pocket_d, $fn = 48);
+        // filter retainer thread (Ø17) — the top-hat filter_ring screws in here
+        translate([0, 0, fring_z0 + fring_engage/2])
+            threaded_rod(d = fring_d + 0.4, l = fring_engage + 0.02,
+                         pitch = fring_pitch, internal = true, $fn = 48);
         // lead-in chamfer at the neck tip (eases the plug into the socket)
         translate([0, 0, stem_end_z - 0.01])
             cylinder(h = 2, d1 = neck_od + 1, d2 = neck_od - 3);
-
-        // field stop -> filter pocket -> retainer thread, opening toward +Z
-        translate([0, 0, -0.01])
-            cylinder(h = fs_z0 + 0.02, d = filter_clear_d, $fn = 48);
-        translate([0, 0, fs_z1 - 0.01])
-            cylinder(h = flange_thk + reg_boss_h + 2, d = filter_pocket_d, $fn = 48);
-        translate([0, 0, filt_z1 + fring_engage/2])
-            threaded_rod(d = fring_d + 0.4, l = fring_engage + 0.02,
-                         pitch = fring_pitch, internal = true, $fn = 48);
 
         // shallow groove around the plug for the barrel's 3 join-screw tips
         translate([0, 0, stem_end_z + join_len/2])
