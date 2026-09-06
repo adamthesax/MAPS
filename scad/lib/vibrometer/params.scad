@@ -3,38 +3,29 @@
 // Anything DERIVED lives at the bottom under "computed".
 //
 // KEY IDEA: the vibrometer is the **stock camera enclosure** — the same
-// `front_plate`, `body`, `sensor_carrier`, `rear_plate`, `base_mount` and
-// `shims` from scad/lib/camera/ — with one part swapped: a printed
-// `laser_board` takes the place of the CMOS sensor PCB on the carrier. It
-// carries a collimated 650 nm self-mixing laser + a BPW34 pick-off and fires
+// `front_plate` (C-mount), `body`, `sensor_carrier`, `rear_plate`, `base_mount`
+// and `shims` from scad/lib/camera/, unchanged — with one part swapped: a
+// printed `laser_board` takes the place of the CMOS sensor PCB on the carrier.
+// It carries a collimated 650 nm self-mixing laser + a BPW34 pick-off and fires
 // forward through the front-plate bore at the target.
 //
-// So this file just `include`s the camera params and pins a nominal,
-// self-consistent flange-focal-distance stack: the three `assert()`s in
-// scad/lib/camera/params.scad stay meaningful and `body_length` still *solves*
-// exactly as for a camera. No camera-params edits.
+// This file `include`s the camera params unchanged, so `body_length`, the
+// register/interface dims and the three `assert()`s all resolve exactly as for
+// `generic_29mm_c` (26.626 mm body). It then adds only the laser_board knobs.
 //
-// Z convention is the camera's: z = 0 at the C/CS flange face, +Z toward the
+// NOTE (mapscam variant-override bug): a generated variant stub's `[params]`
+// overrides do NOT reach modules pulled in with `use` (the reused camera parts).
+// So the enclosure is always the camera-default `generic_29mm_c`; to change it,
+// change the camera defaults, not this variant. `laser_board.scad` `include`s
+// THIS file directly, so the knobs below DO take effect for the laser board.
+//
+// Z convention is the camera's: z = 0 at the C flange face, +Z toward the
 // carrier / rear. The laser barrel projects toward -Z, out through the bore.
 
 include <../camera/params.scad>
 
 /* [Part selection] */
 part = "assembly"; // [assembly, front, body, carrier, laser_board, rear, base, shims]
-
-/* [Nominal stack — pinned, keeps camera/params.scad asserts meaningful] */
-// "blank" = plain front plate with just the Ø sensor_window_d exit bore (no lens
-// tower / thread). Set "C" or "CS" to add a thread for a screw-on window / filter.
-mount_type              = "blank";
-board_x                 = 29;   // interface footprint: outer = 39 x 39 mm (== generic_29mm_c)
-board_y                 = 29;
-board_hole_pitch_x      = 22;
-board_hole_pitch_y      = 22;
-// Left at the camera default so `body_length` derives to exactly the same value
-// as generic_29mm_c (26.626 mm) — the vibrometer runs the SAME body.
-board_to_sensor_surface = 2.5;  // [0.5:0.1:6]
-standoff_h              = 4.0;  // [2:0.5:10]
-gland                   = "PG7"; // cable exit for the laser + BPW34 leads
 
 /* [Laser board — plate] */
 laser_board_thk  = 3.0;   // [2:0.5:6] printed board thickness
@@ -66,9 +57,6 @@ bpw34_wall       = "+Y";  // [+Y, -Y] which side of the barrel the detector pock
 
 /* [Laser board — routing] */
 cable_ch_d       = 4.0;   // [2:0.5:8] wire channel from the pockets back toward the carrier
-
-/* [Quality] */
-$fn = 64;
 
 // ===========================================================================
 // computed — do not edit; these fall out of the parameters above
@@ -102,7 +90,7 @@ assert(collim_front_z > laser_exit_z + 2,
 assert(beam_bore_d < laser_barrel_od - 2*1.5,
     "beam_bore_d leaves no barrel wall. Shrink the bore or grow laser_barrel_od.");
 
-echo(str("== vibrometer ==  stock camera enclosure + printed laser_board"));
+echo(str("== vibrometer ==  stock generic_29mm_c enclosure + printed laser_board"));
 echo(str("   laser can D=", laser_can_d, " mm   barrel D=", laser_barrel_od,
          " mm   barrel len=", laser_barrel_len, " mm   exit z=", laser_exit_z, " mm"));
 echo(str("   BPW34=", bpw34_pkg, " (pocket ", bpw34_body_d, " mm)   board back z=", lb_back_z, " mm"));

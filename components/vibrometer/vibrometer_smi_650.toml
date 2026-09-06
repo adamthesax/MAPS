@@ -1,9 +1,12 @@
 type  = "vibrometer"
 title = "Laser vibrometer — Phase 1 self-mixing, 650 nm (stock body + laser_board)"
 
-# The enclosure is exactly generic_29mm_c (39 x 39 mm, body_length 26.6 mm) with
-# a "blank" front (plain exit bore). Only the laser_board parameters below differ
-# from scad/lib/vibrometer/params.scad defaults.
+# The enclosure is exactly generic_29mm_c (39 x 39 mm, body_length 26.626 mm,
+# stock C-mount front). The default scad/lib/vibrometer/params.scad values ARE
+# the smi_650 configuration, so the [params] below only restate the headline
+# ones for documentation — and, per the mapscam variant-override bug, a stub's
+# [params] currently do not reach the reused camera modules anyway (they DO
+# reach laser_board.scad, which include`s params.scad directly).
 [params]
 laser_can_d = 9.0       # 9 mm collimated 650 nm single-mode module
 bpw34_pkg   = "leaded"  # 5 mm through-hole BPW34 pick-off detector

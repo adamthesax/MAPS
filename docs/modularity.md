@@ -37,16 +37,16 @@ so `dispatch.scad` can just draw them all together for the assembly view.
 
 ## The vibrometer: same enclosure, different board
 
-The **`vibrometer`** type (instrument #2) does not add a single new enclosure module. Its
-`dispatch.scad` `use`s the stock `front_plate` / `body` / `sensor_carrier` / `rear_plate` /
+The **`vibrometer`** type (instrument #2) adds no new enclosure module. Its `dispatch.scad`
+`use`s the stock `front_plate` (C-mount) / `body` / `sensor_carrier` / `rear_plate` /
 `base_mount` / `shims` from `scad/lib/camera/`, and `scad/lib/vibrometer/params.scad`
-`include`s `scad/lib/camera/params.scad` and pins the camera-default stack — so
-`body_length` derives to the identical 26.626 mm.
+`include`s `scad/lib/camera/params.scad` unchanged — so the enclosure is `generic_29mm_c`
+exactly, `body_length` 26.626 mm.
 
 The one new part is **`laser_board`** — the peer of the *CMOS sensor PCB*, not of a printed
 module. It bolts to the carrier standoffs at the same `board_hole_pitch_x/y` M2 pattern,
 back face at `pcb_back_z`, and projects a forward barrel (collimated 650 nm laser + BPW34
-pick-off) through the front-plate bore. See
+pick-off) through the front-plate C-mount bore. See
 [vibrometer/design-notes.md](vibrometer/design-notes.md).
 
 ## Adding a new module

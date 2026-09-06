@@ -5,12 +5,13 @@ Headline per phase. Board-level part lists: [`elec/afe/bom.csv`](../../elec/afe/
 
 ## Printed parts (Phase 1)
 
-Every part except `laser_board` is the **stock camera part**, identical to
-`generic_29mm_c` (`mount_type = "blank"` gives a plain exit bore in the front).
+Every part except `laser_board` is the **stock `generic_29mm_c` part** — same
+STL. The front plate is the stock C-mount front; the Ø16 mm bore passes the
+laser barrel, and the 1"-32 thread is free for a screw-on window / filter.
 
 | Part | Qty | `part=` | Orientation |
 |---|---|---|---|
-| Front plate | 1 | `front` | flange face down |
+| Front plate | 1 | `front` | flange face down, thread-axis vertical |
 | Body | 1 | `body` | register end down — **identical to `generic_29mm_c`, 26.6 mm** |
 | Sensor carrier | 1 | `carrier` | standoffs up |
 | **Laser board** | 1 | `laser_board` | barrel down, plate up, tree/organic supports under the barrel |

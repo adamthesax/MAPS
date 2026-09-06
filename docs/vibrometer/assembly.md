@@ -1,7 +1,7 @@
 # Vibrometer — assembly (Phase 1 self-mixing)
 
-Prereqs: the stock camera enclosure printed (`front` with `mount_type = "blank"`,
-`body`, `carrier`, `rear`, `shims`) plus the one vibrometer-specific part,
+Prereqs: the stock `generic_29mm_c` enclosure printed (`front`, `body`,
+`carrier`, `rear`, `shims`) plus the one vibrometer-specific part,
 `laser_board`; the AFE PCB populated and bench-checked
 ([calibration.md](calibration.md)); the laser driver set to its current setpoint
 with the laser **off**.

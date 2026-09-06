@@ -1,8 +1,9 @@
 // mapscam vibrometer — part dispatch. Included after params (or params + overrides).
 //
-// The vibrometer is the STOCK camera enclosure — front / body / carrier / rear /
-// base / shims all come straight from scad/lib/camera/, unchanged — with the
-// CMOS sensor PCB replaced by a printed `laser_board` on the carrier standoffs.
+// The vibrometer is the STOCK generic_29mm_c enclosure — front (C-mount) / body /
+// carrier / rear / base / shims all come straight from scad/lib/camera/,
+// unchanged — with the CMOS sensor PCB replaced by a printed `laser_board` on
+// the carrier standoffs.
 
 use <../util.scad>
 use <../camera/front_plate.scad>

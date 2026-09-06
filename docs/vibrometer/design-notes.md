@@ -13,17 +13,21 @@ decisions behind it.
                                                    standoffs where a CMOS PCB goes
 ```
 
-`front` / `body` / `carrier` / `rear` / `base` / `shims` are the **stock camera
-parts, unchanged**. `scad/lib/vibrometer/params.scad` `include`s
-`scad/lib/camera/params.scad` and pins the camera-default stack, so `body_length`
-derives to the identical **26.626 mm** (`generic_29mm_c`). The only new part is
+`front` / `body` / `carrier` / `rear` / `base` / `shims` are the **stock
+`generic_29mm_c` parts, unchanged** — including the **C-mount front plate**.
+`scad/lib/vibrometer/params.scad` `include`s `scad/lib/camera/params.scad`
+untouched, so `body_length`, the register and the three asserts resolve exactly
+as for `generic_29mm_c` (**26.626 mm** body). The only new part is
 **`laser_board`** — a printed sub-mount that bolts to the carrier standoffs at
 the same `board_hole_pitch` M2 pattern, back face at `pcb_back_z`, exactly like a
 sensor PCB. It carries a forward barrel (TO-can laser + collimator + 45° glass
-pick-off + BPW34 pocket) that reaches through the front-plate bore and a few mm
-past the flange. The front plate defaults to `mount_type = "blank"` (plain exit
-bore, no thread tower); set `"C"` to add a thread for a screw-on window or
-filter. See [modularity.md](../modularity.md).
+pick-off + BPW34 pocket) that passes through the front-plate C-mount bore
+(Ø `sensor_window_d` = 16 mm) and a few mm past the flange. The C-mount thread is
+free to carry a screw-on protective window / ND filter. See
+[modularity.md](../modularity.md).
+
+> The front-plate lens interface is being worked separately; this branch takes
+> the stock C-mount front as-is.
 
 ## Sensing principle
 
@@ -100,21 +104,25 @@ The vibrometer has no CMOS sensor, but it runs the **same body**, whose length i
 *solved* from that stack.
 
 - The vibrometer is its **own component type** — `components/_type/vibrometer.toml`,
-  alongside `camera` and `lens` (see [../components.md](../components.md)) — but
-  its `parts` list is the camera's six parts with the CMOS PCB replaced by
+  alongside `camera`, `lens` and `receiver` (see [../components.md](../components.md))
+  — but its `parts` list is the camera's six parts with the CMOS PCB replaced by
   `laser_board`.
-- `scad/lib/vibrometer/params.scad` **`include`s `scad/lib/camera/params.scad`**
-  and pins the camera-default stack (`board_to_sensor_surface = 2.5`,
-  `standoff_h = 4.0`, `mount_type = "blank"`). All three camera `assert()`s stay
-  meaningful, and `body_length` still *derives* — to **26.626 mm, byte-identical
-  to `generic_29mm_c`**. **No `scad/lib/camera/params.scad` edits.**
+- `scad/lib/vibrometer/params.scad` **`include`s `scad/lib/camera/params.scad`
+  unchanged** and adds only the laser_board knobs. The camera defaults *are*
+  `generic_29mm_c`, so `body_length` still *derives* to **26.626 mm, identical to
+  `generic_29mm_c`**, and all three camera `assert()`s stay meaningful. **No
+  `scad/lib/camera/params.scad` edits.**
 - `scad/lib/vibrometer/dispatch.scad` `use`s the stock camera modules
   (`use <../camera/front_plate.scad>` …) and adds only `laser_board`. The camera
   dispatch is untouched. `laser_board` extra asserts (barrel clears the bore, the
   can + collimator fit, the pick-off lands on exposed barrel) sit alongside the
   camera's.
-- `components/vibrometer/vibrometer_smi_650.toml` pins the few `laser_board`
-  parameters that differ from the type defaults; `make gen` expands it.
+- **Known limitation** — the mapscam variant-override bug: a generated stub's
+  `[params]` do not propagate into `use`d modules, so the reused enclosure is
+  always the camera default (`generic_29mm_c`); a future vibrometer variant that
+  needs a different board size / mount can't get it from the TOML until that bug
+  is fixed. `laser_board.scad` `include`s `params.scad` directly, so its own
+  knobs are unaffected.
 - DAQ / firmware code lives in a top-level `sw/` (incl. `sw/firmware/`);
   electronics in a top-level `elec/` (the transimpedance front end is a small PCB
   wired to the laser board — carrier back or external, not a printed part).

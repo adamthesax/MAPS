@@ -7,13 +7,14 @@ Parametric OpenSCAD source for a modular 3D-printed enclosure for board-level C-
 cameras (fixed / monitoring use). Mechanical design + docs only, no firmware.
 Read `README.md` and `docs/design-notes.md` for the full picture.
 
-The repo also hosts M.A.P.S. instrument #2, a **BPW34 laser vibrometer**, as a third
-component type (`camera` · `lens` · `vibrometer`). The vibrometer **is the stock camera
-enclosure** — same `front`/`body`/`carrier`/`rear`/`base`/`shims` — with the CMOS sensor
-PCB swapped for a printed `laser_board` (`scad/lib/vibrometer/laser_board.scad`) on the
-carrier standoffs. Plus two non-SCAD top-level trees — `elec/` (board design) and `sw/`
-(Python acquisition/analysis + `sw/firmware/` for a Teensy/RP2040 DAQ). The "no firmware"
-rule is scoped to `scad/lib/`. See `docs/vibrometer/`.
+The repo also hosts M.A.P.S. instrument #2, a **BPW34 laser vibrometer**, as a component
+type (`camera` · `lens` · `receiver` · `vibrometer`). The vibrometer **is the stock
+`generic_29mm_c` enclosure** — same `front`/`body`/`carrier`/`rear`/`base`/`shims`,
+C-mount front and all — with the CMOS sensor PCB swapped for a printed `laser_board`
+(`scad/lib/vibrometer/laser_board.scad`) on the carrier standoffs. Plus two non-SCAD
+top-level trees — `elec/` (board design) and `sw/` (Python acquisition/analysis +
+`sw/firmware/` for a Teensy/RP2040 DAQ). The "no firmware" rule is scoped to `scad/lib/`.
+See `docs/vibrometer/`.
 
 ## Build
 
@@ -41,12 +42,14 @@ For ad hoc CLI runs, set it yourself. BOSL2 is a git submodule (`make vendor` to
 5. **Parts must render 2-manifold individually.** The `assembly` view may not (coincident
    mating faces) — it's preview only, not for STL export.
 6. **The vibrometer is a camera with a different sensor board.** No
-   `scad/lib/camera/params.scad` edits: `scad/lib/vibrometer/params.scad` includes it and
-   pins the camera-default stack so `body_length` derives to the *identical* 26.626 mm.
+   `scad/lib/camera/params.scad` edits: `scad/lib/vibrometer/params.scad` `include`s it
+   unchanged, so the enclosure is `generic_29mm_c` exactly (`body_length` 26.626 mm).
    `scad/lib/vibrometer/dispatch.scad` `use`s the stock camera `front_plate` / `body` /
-   `sensor_carrier` / `rear_plate` / `base_mount` / `shims` unchanged; the only new part is
+   `sensor_carrier` / `rear_plate` / `base_mount` / `shims`; the only new part is
    `laser_board` (peer of the CMOS PCB — same `board_hole_pitch` M2 pattern, back face at
-   `pcb_back_z`).
+   `pcb_back_z`). Its own knobs live in `vibrometer/params.scad` and reach `laser_board.scad`
+   via a direct `include`; per the variant-override bug they do **not** reach the reused
+   camera modules, so the enclosure can't be re-dimensioned from the vibrometer TOML.
 
 ## Layout
 

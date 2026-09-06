@@ -81,9 +81,9 @@ camera**. The `vibrometer` component reuses the stock `front` / `body` / `carrie
 / `base` / `shims` parts unchanged; the only thing that changes is the "sensor board": a
 printed **`laser_board`** (`part = "laser_board"`) bolts to the carrier standoffs exactly
 where a CMOS PCB would, carrying a collimated 650 nm self-mixing laser + a BPW34 pick-off
-that fires forward through the front-plate bore. Its `params.scad` includes the camera's
-and pins the same nominal stack, so `body_length` derives to the **identical 26.626 mm** as
-`generic_29mm_c`. Pair it with the `vibrometer_80mm` receiver optic for the return path.
+that fires forward through the stock C-mount front bore. Its `params.scad` `include`s the
+camera's unchanged, so the enclosure is `generic_29mm_c` exactly (`body_length` **26.626 mm**).
+Pair it with the `vibrometer_80mm` receiver optic for the return path.
 
 ```bash
 make vibrometer_smi_650                 # front·body·carrier·laser_board·rear·base·shims
