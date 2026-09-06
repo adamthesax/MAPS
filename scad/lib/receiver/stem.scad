@@ -47,24 +47,29 @@ module stem() {
             translate([0, 0, -wall]) cylinder(h = wall, d1 = neck_od, d2 = neck_od + 2*wall);
         }
 
-        // --- axial optical path: -Z (target) up to +Z (body / detector) ---
+        // --- axial optical path, -Z (target) up to +Z (body / detector) ---
+        //  Ø22 neck bore -> Ø6 field stop -> [SEAT] -> Ø8.6 filter pocket -> funnel
+        //  -> Ø17 retainer thread (filter_ring body) -> Ø17.6 clearance -> body cavity
         // wide neck bore, up to the field stop
         translate([0, 0, stem_end_z - 1])
             cylinder(h = fs_z0 - stem_end_z + 1, d = neck_bore, $fn = 48);
         // field stop (Ø6) — overlaps the neck bore below; ends at the seat shoulder
         translate([0, 0, fs_z0 - 0.6])
             cylinder(h = (fs_z1 - fs_z0) + 0.6, d = filter_clear_d, $fn = 48);
-        // Ø8.6 filter pocket + clearance bore, all the way out the boss top
+        // Ø8.6 filter pocket — holds the filter and guides the ring nose
         translate([0, 0, fs_z1])
-            cylinder(h = flange_thk + filter_boss_h - fs_z1 + 1, d = filter_pocket_d, $fn = 48);
-        // filter retainer thread (Ø17) — the top-hat filter_ring screws in here
+            cylinder(h = fring_z0 - 1.5 - fs_z1 + 0.02, d = filter_pocket_d, $fn = 48);
+        // funnel: Ø8.6 pocket up to the Ø17 thread bore
+        translate([0, 0, fring_z0 - 1.5])
+            cylinder(h = 1.51, d1 = filter_pocket_d, d2 = fring_d, $fn = 48);
+        // retainer thread (Ø17) — the filter_ring body screws in here
         translate([0, 0, fring_z0 + fring_engage/2])
             threaded_rod(d = fring_d + 0.4, l = fring_engage + 0.02,
                          pitch = fring_pitch, internal = true, $fn = 48);
-        // funnel at the pocket mouth: guides the filter_ring nose into the Ø8.6
-        // pocket as it descends through the wider thread bore
-        translate([0, 0, fring_z0 - 1.5])
-            cylinder(h = 1.51, d1 = filter_pocket_d, d2 = fring_d, $fn = 48);
+        // Ø17.6 clearance above the thread so the ring body passes through to the cavity
+        translate([0, 0, fring_z0 + fring_engage - 0.01])
+            cylinder(h = flange_thk + filter_boss_h - (fring_z0 + fring_engage) + 1.5,
+                     d = fring_d + 0.6, $fn = 48);
         // lead-in chamfer at the neck tip (eases the plug into the socket)
         translate([0, 0, stem_end_z - 0.01])
             cylinder(h = 2, d1 = neck_od + 1, d2 = neck_od - 3);

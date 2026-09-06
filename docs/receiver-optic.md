@@ -74,14 +74,17 @@ HBW 25 nm, T > 85 %). It drops into a Ø8.6 pocket from the body-cavity side and
 seats front-face-down on the **Ø6 field stop shoulder** (`filter_clear_d`, which is
 also the FOV stop).
 
-The **`filter_ring`** is a top hat. Drop it in nose-first and turn it with a flat
-screwdriver (top slot): the Ø17 body threads into the stem's `fring` thread for
-~2.3 turns of real travel, then it seats — the **`fring_nose_h` = 2.0 mm nose meets
-the filter back face at the same instant the body shoulder bottoms on the Ø17 → Ø8.6
-step**, so the filter is captured with *zero* clamping stress on the thin glass and
-the thread still carries its full 3.5 mm engagement. A funnel at the pocket mouth
-guides the nose in past the wider thread bore. The ring's Ø6 bore is the clear
-aperture. Assemble the whole cell before bolting the stem to the body.
+The **`filter_ring`** is a top hat. The stem bore above the seat, going toward the
+body, is: `Ø8.6 pocket` → `funnel` → `Ø17 internal thread` (3.5 mm) → `Ø17.6
+clearance` → out the boss top. Drop the ring in nose-first from the body side and
+turn it with a flat screwdriver (top slot): the Ø17 body passes through the Ø17.6
+clearance, its thread catches the stem thread, and it winds down ~2.3 turns
+(1.5 mm pitch). It seats when the **`fring_nose_h` = 2.0 mm nose meets the filter
+back face at the same instant the body shoulder bottoms on the Ø17 → Ø8.6 step** —
+so the filter is captured with *zero* clamping stress on the thin glass while the
+thread carries its full 3.5 mm engagement. A funnel at the pocket mouth centres the
+nose; the ring's Ø6 bore is the clear aperture. Assemble the whole cell before
+bolting the stem to the body.
 
 The cell lives in a **Ø`filter_boss_d` (24 mm) boss** on the body side of the flange,
 projecting ~7 mm into the body cavity — check it clears your AFE PCB / carrier ledge.

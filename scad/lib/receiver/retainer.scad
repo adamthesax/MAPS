@@ -32,7 +32,7 @@ module lens_retainer() {
 // and the thread carries full engagement. A flat screwdriver turns the top slot.
 module filter_ring() {
     nose_d = filter_pocket_d - 0.5;            // slides in the Ø8.6 pocket
-    body_h = fring_engage + 2.5;
+    body_h = fring_engage + 4.0;               // thread engagement + a slotted head above the boss
     difference() {
         union() {
             // nose, with a tip chamfer so it can't catch the filter edge
