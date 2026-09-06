@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,3 +41,94 @@ jobs:
             stl/*.stl
             renders/*.png
           if-no-files-found: error
+
+  preview:
+    # Render the component previews and post them on the PR as inline images.
+    # PNGs are pushed to a throwaway `ci-previews` branch (keeps main history
+    # clean) and the comment links them by commit SHA (immune to image caching).
+    # Same-repo PRs only — fork PRs get a read-only token.
+    needs: build
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          ref: ${{ github.head_ref }}
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
+      - name: Render previews
+        run: xvfb-run -a make renders
+
+      - name: Publish previews to the ci-previews branch
+        id: publish
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          src="$(mktemp -d)"
+          cp renders/*.png "$src/"
+          head_sha="$(git rev-parse --short HEAD)"
+
+          # Work in a clean checkout so the PR working tree / submodules are untouched.
+          work="$(mktemp -d)"
+          cd "$work"
+          git init -q
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin ci-previews >/dev/null 2>&1; then
+            git fetch -q --depth=1 origin ci-previews
+            git checkout -q -B ci-previews FETCH_HEAD
+          else
+            git checkout -q --orphan ci-previews
+          fi
+
+          dir="pr-${PR}"
+          rm -rf "$dir"
+          mkdir -p "$dir"
+          cp "$src"/*.png "$dir/"
+          git add "$dir"
+          git commit -q -m "previews for PR #${PR} @ ${head_sha}" || echo "no preview changes"
+          git push -q origin HEAD:ci-previews
+
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build the preview comment
+        run: |
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.publish.outputs.sha }}/pr-${PR}"
+          {
+            echo "## Component previews"
+            echo
+            echo "Rendered from ${{ github.event.pull_request.head.sha }} by CI — updates on every push."
+            echo
+            for png in renders/*.png; do
+              [ -e "$png" ] || continue
+              name="$(basename "$png" .png)"
+              echo "<details open><summary><code>${name}</code></summary>"
+              echo
+              echo "![${name}](${base}/${name}.png)"
+              echo
+              echo "</details>"
+              echo
+            done
+          } > preview-comment.md
+          cat preview-comment.md
+
+      - name: Post / update the preview comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: component-previews
+          path: preview-comment.md

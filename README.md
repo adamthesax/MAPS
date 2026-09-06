@@ -56,6 +56,12 @@ not hand-edit them. See [docs/components.md](docs/components.md).
 | Variant | Description |
 |---|---|
 | `achromat_12mm_c` | Ø12.7 achromat barrel, C-mount, M30.5 filter |
+
+### Receiver components
+
+| Variant | Description |
+|---|---|
+| `vibrometer_80mm` | Ø80 f150 receiver, fixed focus, 808 nm filter, 39 mm body |
 <!-- END GENERATED:components -->
 
 Add your own: drop a TOML in `components/camera/` or `components/lens/`, run `make gen`,

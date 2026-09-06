@@ -110,6 +110,18 @@ focus is still the camera's shim stack plus (for a real lens) the focus ring.
   caveat as the printed C-mount thread.
 - No baffles / internal blackening geometry; paint the bore or add a flock liner.
 
+## Receiver optic (vibrometer)
+
+`mapscam` also prints a **large-aperture receiver telescope** for the M.A.P.S. laser
+vibrometer: a bought Ø80 mm f≈150 mm optic, feeding the return beam through an 8 mm
+808 nm bandpass filter to a detector on a stock `body`. **Fixed focus for now** — one
+rigid tube: a short `stem` (body interface + filter cell) plugs into the rear of the
+long `barrel` (holds the optic) and is pinned with 3 screws. Separate component
+*type* (`components/receiver/*.toml`, `scad/lib/receiver/`); it reuses the camera
+register + M3 pattern so the stem is a `front_plate` peer. Focus control is a planned
+follow-up (a threaded element cell inside the barrel). Full write-up:
+[receiver-optic.md](receiver-optic.md).
+
 ## Known limitations of v0.1
 
 - Sensor tilt (non-perpendicularity) is controlled only by print flatness of the ledge and

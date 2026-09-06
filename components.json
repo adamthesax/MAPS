@@ -36,6 +36,23 @@
         "hood",
         "assembly"
       ]
+    },
+    "receiver": {
+      "lib": "scad/lib/receiver",
+      "entry": "scad/receiver.scad",
+      "parts": [
+        "stem",
+        "barrel",
+        "lens_retainer",
+        "filter_ring"
+      ],
+      "check_parts": [
+        "stem",
+        "barrel",
+        "lens_retainer",
+        "filter_ring",
+        "assembly"
+      ]
     }
   },
   "components": [
@@ -88,6 +105,22 @@
         "clear_aperture_d": 10.0,
         "filter_thread": "M30.5x0.5",
         "hood_style": "round"
+      }
+    },
+    {
+      "name": "vibrometer_80mm",
+      "type": "receiver",
+      "title": "Ø80 f150 receiver, fixed focus, 808 nm filter, 39 mm body",
+      "params": {
+        "element_d": 80,
+        "clear_aperture_d": 74,
+        "focal_length": 150,
+        "flange_to_optic": 150,
+        "filter_d": 8.0,
+        "filter_thk": 0.55,
+        "filter_clear_d": 6.0,
+        "body_outer_x": 39,
+        "body_outer_y": 39
       }
     }
   ]
