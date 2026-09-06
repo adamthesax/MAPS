@@ -1,0 +1,16 @@
+# Component type: M.A.P.S. laser vibrometer (instrument #2).
+#
+# The vibrometer IS the stock camera enclosure — same front / body / carrier /
+# rear / base / shims from scad/lib/camera/ — with the CMOS sensor PCB replaced
+# by a printed `laser_board` (a collimated 650 nm self-mixing laser + BPW34
+# pick-off) on the carrier standoffs. scad/lib/vibrometer/params.scad `include`s
+# scad/lib/camera/params.scad and pins a nominal flange-focal-distance stack so
+# the camera asserts stay meaningful and `body_length` still derives. See
+# docs/vibrometer/.
+
+lib         = "scad/lib/vibrometer"
+entry       = "scad/vibrometer.scad"
+params_file = "scad/lib/vibrometer/params.scad"
+parts       = ["front", "body", "carrier", "laser_board", "rear", "base", "shims"]
+check_parts = ["front", "body", "carrier", "laser_board", "rear", "base", "shims", "assembly"]
+preview_cam = "0,0,18,62,0,23,235"

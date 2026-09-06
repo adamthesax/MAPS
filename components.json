@@ -53,6 +53,29 @@
         "filter_ring",
         "assembly"
       ]
+    },
+    "vibrometer": {
+      "lib": "scad/lib/vibrometer",
+      "entry": "scad/vibrometer.scad",
+      "parts": [
+        "front",
+        "body",
+        "carrier",
+        "laser_board",
+        "rear",
+        "base",
+        "shims"
+      ],
+      "check_parts": [
+        "front",
+        "body",
+        "carrier",
+        "laser_board",
+        "rear",
+        "base",
+        "shims",
+        "assembly"
+      ]
     }
   },
   "components": [
@@ -121,6 +144,16 @@
         "filter_clear_d": 6.0,
         "body_outer_x": 39,
         "body_outer_y": 39
+      }
+    },
+    {
+      "name": "vibrometer_smi_650",
+      "type": "vibrometer",
+      "title": "Laser vibrometer — Phase 1 self-mixing, 650 nm (stock body + laser_board)",
+      "params": {
+        "laser_can_d": 9.0,
+        "bpw34_pkg": "leaded",
+        "bpw34_wall": "+Y"
       }
     }
   ]

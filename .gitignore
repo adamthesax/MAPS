@@ -17,3 +17,8 @@ renders/*.deps
 *~
 .vscode/
 .idea/
+
+# python
+__pycache__/
+*.pyc
+.venv/
