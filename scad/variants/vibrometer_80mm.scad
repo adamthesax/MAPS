@@ -5,11 +5,7 @@ include <../lib/receiver/params.scad>
 element_d = 80;
 clear_aperture_d = 74;
 focal_length = 150;
-focus_nominal = 150;
-focus_travel = 25;
-fine_travel = 6;
-draw_od = 24;
-draw_id = 17;
+flange_to_optic = 150;
 filter_d = 8.0;
 filter_clear_d = 6.0;
 body_outer_x = 39;

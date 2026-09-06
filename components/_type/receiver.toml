@@ -4,6 +4,6 @@
 lib         = "scad/lib/receiver"
 entry       = "scad/receiver.scad"
 params_file = "scad/lib/receiver/params.scad"
-parts       = ["flange", "stem", "barrel", "clamp", "lens_retainer", "filter_ring"]
-check_parts = ["flange", "stem", "barrel", "clamp", "lens_retainer", "filter_ring", "assembly"]
-preview_cam = "0,0,-135,64,0,22,1000"
+parts       = ["stem", "barrel", "lens_retainer", "filter_ring"]
+check_parts = ["stem", "barrel", "lens_retainer", "filter_ring", "assembly"]
+preview_cam = "0,0,-100,64,0,22,840"
