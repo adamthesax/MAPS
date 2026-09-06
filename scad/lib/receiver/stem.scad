@@ -61,6 +61,10 @@ module stem() {
         translate([0, 0, fring_z0 + fring_engage/2])
             threaded_rod(d = fring_d + 0.4, l = fring_engage + 0.02,
                          pitch = fring_pitch, internal = true, $fn = 48);
+        // funnel at the pocket mouth: guides the filter_ring nose into the Ø8.6
+        // pocket as it descends through the wider thread bore
+        translate([0, 0, fring_z0 - 1.5])
+            cylinder(h = 1.51, d1 = filter_pocket_d, d2 = fring_d, $fn = 48);
         // lead-in chamfer at the neck tip (eases the plug into the socket)
         translate([0, 0, stem_end_z - 0.01])
             cylinder(h = 2, d1 = neck_od + 1, d2 = neck_od - 3);

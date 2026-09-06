@@ -129,10 +129,12 @@ fs_z1    = fs_z0 + 1.4;                             // field stop back / filter 
 filt_z1  = fs_z1 + filter_thk;                      // filter back face
 fring_pitch  = 1.5;
 fring_d      = 17;                                  // filter retainer thread major dia
-fring_nose_h = 3.0;                                 // filter_ring nose — reaches down onto the filter
-fring_z0     = filt_z1 + fring_nose_h - 1.0;        // retainer thread starts here
+fring_nose_h = 2.0;                                 // filter_ring nose: spans the Ø8.6 pocket to the filter
+// stem thread starts exactly where the ring's body shoulder lands when the nose is
+// on the filter -> full engagement AND zero clamping stress on the 0.55 mm glass.
+fring_z0     = filt_z1 + fring_nose_h;
 fring_engage = 3.5;                                 // thread length
-filter_boss_h = fring_z0 + fring_engage + 2.5 - flange_thk;  // filter-cell boss height above the plate
+filter_boss_h = fring_z0 + fring_engage + 3.0 - flange_thk;  // filter-cell boss height above the plate
 
 // ---- sanity checks ----
 assert(clear_aperture_d <= element_d - 2.0,
