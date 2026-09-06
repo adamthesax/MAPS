@@ -45,7 +45,7 @@ focus_travel  = 25;   // [5:1:60]  ± coarse draw-tube adjustment about focus_no
 // Rotate the stem for continuous fine focus; lock with a radial M3 grub in the collar.
 fine_travel  = 6;    // [0:1:16]   total axial range of the helicoid
 helix_pitch  = 2.5;  // [1:0.25:3] printed helicoid thread pitch (mm/turn)
-helix_engage = 8;    // [5:1:16]   thread length always meshed, at any focus setting
+helix_engage = 10;    // [5:1:16]   thread length always meshed, at any focus setting
 
 /* [Draw tube / stem] */
 draw_od     = 24;    // [16:0.5:40] stem (draw-tube) outside diameter
@@ -121,14 +121,14 @@ helix_major      = draw_od + 12;                    // helicoid major diameter
 helix_fit        = 0.35;                            // radial slop on the printed helicoid
 helix_boss_len   = helix_engage + fine_travel + 2;  // flange boss length, -Z from z = 0
 helix_collar_len = helix_engage + fine_travel;      // stem female-thread length
-stem_collar_od   = helix_major + 2*wall + 3;        // stem helicoid collar OD
+stem_collar_od   = helix_major + 2*wall + 8;   // collar OD — generous wall behind the female thread (grub load)
 stem_top_z       = -(fine_travel/2 + 2);            // stem collar top face, at mid-travel
 neck_len         = 8;                               // stem: helicoid collar -> draw tube cone
 stem_neck_bot    = stem_top_z - helix_collar_len - neck_len;  // draw-tube top (mid-travel)
 
 // barrel is authored in its own frame: element rear face at z = 0, tube toward +Z.
 // barrel_rear_gap keeps the barrel collet clear of the stem neck at the far extreme.
-barrel_rear_gap = 58;                       // flange face -> barrel rear face, at nominal focus
+barrel_rear_gap = 60;                       // flange face -> barrel rear face, at nominal focus
 barrel_len      = focus_nominal - barrel_rear_gap;   // element rear face -> barrel rear face
 
 // stem is authored in the flange frame (z = 0 at the flange face, tube toward -Z).

@@ -6,10 +6,11 @@
 // Right-hand thread. `helix_male` returns a solid to union; `helix_female_cut`
 // returns the matching negative (bore + groove) to subtract from your own collar.
 
-HELIX_FN    = 30;    // facets around the core
+HELIX_FN    = 60;    // facets around the core
 HELIX_DEPTH = 1.5;   // radial thread depth (major_d = root_d + 2*HELIX_DEPTH)
 
-function helix_slices(len, pitch) = max(24, ceil((len / pitch) * HELIX_FN / 6));
+// ~22 extrude slices per thread turn -> a smooth helix, not a coarse polygon.
+function helix_slices(len, pitch) = max(48, ceil((len / pitch) * 22));
 
 module helix_rib(root_d, len, pitch, depth, w) {
     linear_extrude(height = len, twist = -360 * len / pitch,

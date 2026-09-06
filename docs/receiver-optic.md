@@ -27,13 +27,19 @@ stray light. Range: **125 – 175 mm** (`focus_nominal ± focus_travel`) — ~1 
 to past infinity.
 
 **Fine: printed helicoid.** The **`stem`** threads onto a male boss on the **`flange`**
-via a light square-profile helicoid (`scad/lib/receiver/helix.scad` — a
+via a square-profile helicoid (`scad/lib/receiver/helix.scad` — a
 `linear_extrude(twist=…)` thread, far cheaper under CGAL than a BOSL2 `threaded_rod`,
 and a square profile prints better on FDM anyway). Grip the knurled stem collar,
 rotate for **`fine_travel` = 6 mm** of continuous travel (~2.4 turns at 2.5 mm
 pitch), lock with a radial M3 grub in the collar. This moves the whole optical tube
 against the body-mounted detector — standard camera-lens focus. Nothing a cable
 crosses rotates (the AFE stays on the fixed flange).
+
+Thread spec: **Ø36 major, 2.5 mm pitch, 1.5 mm deep, ~4 turns (10 mm) always
+engaged, 0.35 mm running clearance.** Coarse and chunky — 5× an M3, prints cleanly
+vertical with no support. The stem collar is Ø50 (≈5.5 mm wall behind the thread) so
+the M3 grub does not split it. Render smoothness vs. time is
+`HELIX_FN` / `helix_slices` in `helix.scad`.
 
 ## Coordinate convention
 
@@ -97,9 +103,12 @@ not exactly f = 150 mm, set `focus_nominal` to its actual back focus and keep
   but neither telescoping joint is light-tight. The Ø6 field stop + the 808 nm
   bandpass filter are the real defense; blacken the bores and, in sunlight, wrap
   the clamp. See the notes in `design-notes.md`.
-- **Helicoid feel.** A square printed thread at 2.5 mm pitch is coarse and a bit
-  notchy; fine for set-and-lock focus, not a silky camera helicoid. `HELIX_FN` /
-  `helix_slices` in `helix.scad` trade render time for smoothness.
+- **Helicoid feel.** A square printed thread at 2.5 mm pitch is coarse — fine for
+  set-and-lock focus, not a silky camera helicoid. It carries the full weight and
+  bending moment of the barrel + optic (the wrap clamp fixes the barrel to the
+  stem), so print it in a stiff material and don't rely on the grub alone if the
+  instrument gets knocked around — a locknut or thread-locker on the helicoid is
+  cheap insurance.
 - **Single bearing.** The barrel rides the stem on one 30 mm collet; a second
   bearing near the optic would cut focus wobble.
 - **Laser path not included** — receiver only, per the current plan. Bistatic
