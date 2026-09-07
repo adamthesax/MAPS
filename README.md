@@ -95,10 +95,11 @@ scad/
   camera.scad          Customizer entry point (camera type)
   lens.scad            Customizer entry point (lens type)
   lib/
-    constants.scad     shared: C/CS optics, thread spec, fastener dims, filter threads
+    constants.scad     shared: C/CS optics, thread spec, fastener dims, filter + NATO rail
     util.scad  hardware.scad         shared helpers
     camera/            params · dispatch · interface · front_plate · body ·
-                       sensor_carrier · rear_plate · base_mount · shims · c_mount
+                       sensor_carrier · rear_plate · base_mount · accessory_rail ·
+                       shims · c_mount
     lens/              params · dispatch · barrel · retainer · hood
   variants/            GENERATED stubs (committed) — do not hand-edit
 components.json         GENERATED manifest (committed)

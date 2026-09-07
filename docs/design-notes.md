@@ -131,7 +131,17 @@ planned follow-up (a threaded element cell inside the barrel). Full write-up:
 
 - Sensor tilt (non-perpendicularity) is controlled only by print flatness of the ledge and
   carrier — no 3-point adjustment yet.
-- Tripod boss is on the rear cap edge; not under the centre of mass.
+- Tripod boss is on the rear cap edge; not under the centre of mass. The body
+  accessory rail (`accessory_rail.scad`, `-Y` by default) is the better load path — a
+  NATO clamp on it slides to the balance point. See
+  [modularity.md](modularity.md#the-accessory-mount-interface-secondary).
+- Accessory-rail profile: the camera "NATO rail" is the Picatinny / STANAG 4694
+  clamping geometry run smooth (no recoil grooves) and low. `NATO_*` in
+  `constants.scad` use the published **21.2 mm** clamp-chamfer width and 45° flanks so
+  off-the-shelf NATO clamps fit; MIL-STD-1913 fixes no height, so it is kept low
+  (~5.6 mm). Still test-fit an actual clamp before a production run — jaw depth and
+  chamfer land vary between makers. Add the recoil grooves + go to full width if you
+  want to use firearms-world clamps instead.
 - No gasket groove modelled — sealing is a foam/O-ring pad against flat faces.
 - Thermal: no vents or heatsink boss. Fine for low-power global-shutter/rolling sensors
   indoors; revisit for continuous outdoor sun.

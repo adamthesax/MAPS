@@ -35,6 +35,34 @@ so `dispatch.scad` can just draw them all together for the assembly view.
 > helpers (`constants.scad`, `util.scad`, `hardware.scad`) stay in `scad/lib/` and are
 > included as `../constants.scad` from inside `lib/camera/`.
 
+## The accessory mount interface (secondary)
+
+Separate from the register above. The `body` can carry a **NATO-style dovetail** on
+any of its four side faces, full length, defined in
+`scad/lib/camera/accessory_rail.scad` (profile constants in `constants.scad`,
+`NATO_*`).
+
+| Feature | Value | Notes |
+|---|---|---|
+| Profile | Picatinny/STANAG-family hex top: 45° chamfers, `NATO_W_MAX`=21.2 across the clamp faces, `NATO_W_TOP`=15.7 flat, ~5.6 proud, smooth | test-fit your clamp first (see design-notes) |
+| Faces | `acc_rail_faces`, any of `"-Y"` `"+Y"` `"-X"` `"+X"` (default `["-Y"]`) | −Y is the natural "down"; add faces for a cage-style rig |
+| Crown holes | `acc_rail_holes` on/off; row spaced ≤ `acc_rail_pitch` (default 12 mm), anchored at both ends | end holes take clamp stop-screws, interior holes are adapter bolt points |
+| Ends | both open, no dam | clamp held by jaw friction + a stop screw in an end crown hole |
+
+Two ways to hang something off a rail:
+
+1. **NATO clamp** (bought or printed) grips the 45° flanks — slides along the rail,
+   so you park it at the balance point for whatever lens is fitted. This is the
+   answer to "the tripod boss isn't under the centre of mass".
+2. **Bolt-on adapter** — screws to the crown M3s. Give the adapter a stub dovetail
+   foot too, so the flanks take shear + anti-rotation and the M3 is just retention;
+   the same adapter then works clamped or bolted. Keep bolt-on loads light (cold
+   shoe, bracket, antenna); a camera + lens on a tripod should go through a clamp.
+
+Params live in `params.scad`. `acc_rail` is the master switch; the rail geometry
+takes `body_length` from the body it sits on, so it always spans the full module
+regardless of variant. `-D acc_rail=false` for a build without any.
+
 ## Adding a new module
 
 1. `include <params.scad>; use <interface.scad>; use <../util.scad>;` (in `scad/lib/camera/`)
