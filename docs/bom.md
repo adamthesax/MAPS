@@ -18,7 +18,7 @@ Per camera, `generic_29mm_c` baseline. Quantities scale with your board.
 
 | Item | Qty | Spec |
 |---|---|---|
-| Heat-set insert, M3 × L5 (OD ≈ 4.0) | 8 + 2–3 | body: 4 front + 4 rear; +2–3 in the accessory-rail crown |
+| Heat-set insert, M3 × L5 (OD ≈ 4.0) | 8 + ~3/rail | body: 4 front + 4 rear; +~3 per accessory rail (if `acc_rail_holes`) |
 | Heat-set insert, M2 × L4 (OD ≈ 3.2) | 4 | carrier standoffs (PCB screws) |
 | Heat-set insert, 1/4"-20 (OD ≈ 8.0, L10) | 1–2 | rear cap edge (tripod); +1 in the `base` boss if wall-mounting |
 | Cap screw, M3 × 8 | 4 | front plate → body |

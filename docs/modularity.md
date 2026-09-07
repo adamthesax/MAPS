@@ -37,17 +37,19 @@ so `dispatch.scad` can just draw them all together for the assembly view.
 
 ## The accessory mount interface (secondary)
 
-Separate from the register above. The `body` carries a **NATO-style dovetail** down
-its **−Y face**, full length, defined in `scad/lib/camera/accessory_rail.scad`
-(profile constants in `constants.scad`, `NATO_*`).
+Separate from the register above. The `body` can carry a **NATO-style dovetail** on
+any of its four side faces, full length, defined in
+`scad/lib/camera/accessory_rail.scad` (profile constants in `constants.scad`,
+`NATO_*`).
 
 | Feature | Value | Notes |
 |---|---|---|
-| Profile | smooth 45° dovetail, `NATO_W_BASE`=10 → `NATO_W_HEAD`=14, `NATO_H`=6.5 proud | no published spec — verify against your clamp |
-| Crown holes | one row of M3 inserts, `acc_rail_pitch` (default 12 mm) | adapter bolt points; the end holes take clamp stop-screws |
-| Fixed stop | integral dam at the front (`z0`) end | slide the clamp on from the rear |
+| Profile | smooth 45° dovetail, `NATO_W_BASE`=10 → `NATO_W_HEAD`=14, `NATO_H`=6.5 proud | nominal — verify against the clamp you'll use (see design-notes) |
+| Faces | `acc_rail_faces`, any of `"-Y"` `"+Y"` `"-X"` `"+X"` (default `["-Y"]`) | −Y is the natural "down"; add faces for a cage-style rig |
+| Crown holes | `acc_rail_holes` on/off; row spaced ≤ `acc_rail_pitch` (default 12 mm), anchored at both ends | end holes take clamp stop-screws, interior holes are adapter bolt points |
+| Ends | both open, no dam | clamp held by jaw friction + a stop screw in an end crown hole |
 
-Two ways to hang something off it:
+Two ways to hang something off a rail:
 
 1. **NATO clamp** (bought or printed) grips the 45° flanks — slides along the rail,
    so you park it at the balance point for whatever lens is fitted. This is the
@@ -57,10 +59,9 @@ Two ways to hang something off it:
    the same adapter then works clamped or bolted. Keep bolt-on loads light (cold
    shoe, bracket, antenna); a camera + lens on a tripod should go through a clamp.
 
-`acc_rail` / `acc_rail_holes` / `acc_rail_pitch` are in `params.scad`; the rail is
-on by default for every camera variant. Use `-D acc_rail=false` for a build without
-it. The rail geometry takes `body_length` from the body it sits on, so it always
-spans the full module regardless of variant.
+Params live in `params.scad`. `acc_rail` is the master switch; the rail geometry
+takes `body_length` from the body it sits on, so it always spans the full module
+regardless of variant. `-D acc_rail=false` for a build without any.
 
 ## Adding a new module
 
