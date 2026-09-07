@@ -119,11 +119,13 @@ rigid tube: a short `stem` (camera interface + filter cell) plugs into the rear 
 long `barrel` (holds the optic) and is pinned with 3 screws. Separate component
 *type* (`components/receiver/*.toml`, `scad/lib/receiver/`). By default (`mount = "C"`)
 the stem ends in a **male 1"-32 thread** and screws straight into a stock
-`generic_29mm_c` front plate — the receiver is just a C-mount lens, no custom plate;
-the slim filter cell passes through the front-plate bore. `mount = "flange"` keeps the
-alternative: the stem carries its own `front_plate`-peer register + M3 pattern and
-bolts to a bare body. Focus control is a planned follow-up (a threaded element cell
-inside the barrel). Full write-up: [receiver-optic.md](receiver-optic.md).
+`generic_29mm_c` front plate — the receiver is just a C-mount lens, no custom plate.
+The 808 nm filter cell sits entirely **−Z of the seating plane** in the neck root, so
+nothing of the receiver reaches past the front plate into the body — body variants
+stay free. `mount = "flange"` keeps the alternative: the stem carries its own
+`front_plate`-peer register + M3 pattern and bolts to a bare body. Focus control is a
+planned follow-up (a threaded element cell inside the barrel). Full write-up:
+[receiver-optic.md](receiver-optic.md).
 
 ## Known limitations of v0.1
 

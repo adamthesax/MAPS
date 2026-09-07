@@ -15,8 +15,9 @@
 // the barrel.
 //
 // Convention: z = 0 is the SEATING PLANE — the "C" shoulder, or the "flange" front
-// face, whichever meets the camera. +Z points INTO the camera (thread, filter,
-// detector); the optics project to -Z, out toward the target. This mirrors
+// face, whichever meets the camera. +Z points INTO the camera (bare thread only,
+// then the detector — nothing of the receiver reaches past here); the filter cell
+// and the optics are all at -Z, out toward the target. This mirrors
 // scad/lib/camera/interface.scad's Z convention.
 
 include <../constants.scad>
@@ -65,7 +66,6 @@ filter_d       = 8.0;   // bandpass filter outside diameter
 filter_thk     = 0.55;  // filter thickness (from the datasheet)
 filter_clear_d = 6.0;   // field stop / clear aperture (seat inner diameter)
 filter_fit     = 0.30;  // [0:0.05:0.6] radial slip fit for the filter in its pocket
-filter_boss_d  = 0;     // [0:1:34] 0 = auto (retainer thread + wall); or pin a value in mm
 
 /* [Enclosure] */
 wall            = 3;    // [2:0.5:6] barrel / stem wall thickness
@@ -77,7 +77,7 @@ retainer_thk    = 4.0;  // [2:0.5:8] lens retainer ring thickness
 $fn = 64;
 
 // assembly-preview only: how far to pull the parts apart along Z (0 = show fitted).
-explode_gap = 60;
+explode_gap = 40;
 
 // ===========================================================================
 // computed — do not edit; these fall out of the parameters above
@@ -142,28 +142,34 @@ join_screw_tap = (join_screw == "M2.5") ? M2_5_TAP : M3_TAP;
 // the socket bottom.
 stem_end_z     = socket_bot_z;                         // neck tip, global z
 
-// ---- 808 nm filter cell, in the stem (fixed to the body) ----
-// Stack, +Z (toward the body/detector): field stop -> filter (drops in from the
-// body side, seats on the fs_z1 shoulder) -> top-hat filter_ring (its Ø nose
-// reaches down onto the filter, its threaded body engages the fring thread). The
-// whole cell lives in a Ø filter_boss_d_c boss. For "flange" it projects into the
-// body cavity; for "C" it is slim enough to pass a stock Ø16 front-plate bore.
+// ---- 808 nm filter cell ----
+// Entirely on the -Z (target/barrel) side of the seating plane, cut into the stem
+// neck root — NOTHING projects toward +Z past the bare thread / flange into the
+// camera, so the receiver stays a clean C-mount citizen and body variants are free.
+// Stack, reading -Z from the seating plane (z = 0) toward the barrel:
+//   [Ø thread_bore_d clear bore] | Ø6 field-stop & seat land | Ø8.6 filter | ring
+//   nose | funnel | Ø fring_d retainer thread | ring lead-in | -> neck bore -> barrel
+// The filter drops in from the -Z (barrel) end and the filter_ring screws in behind
+// it; assemble the cell BEFORE plugging the barrel onto the neck.
 filter_pocket_d = filter_d + 2*filter_fit;          // Ø8.6 filter pocket
-fs_z0    = 0.8;                                     // field stop front face
-fs_z1    = fs_z0 + 1.4;                             // field stop back / filter seat shoulder
-filt_z1  = fs_z1 + filter_thk;                      // filter back face
-// compact thread for "C" (cell must clear a Ø16 bore); roomier for "flange"
-fring_pitch  = is_cmount ? 1.25 : 1.5;
-fring_d      = is_cmount ? 11.5 : 17;               // filter retainer thread major dia
-fring_wall   = is_cmount ? 1.75 : wall;             // wall around the retainer thread
-fring_nose_h = 2.0;                                 // filter_ring nose: spans the Ø8.6 pocket to the filter
+fs_len   = 0.8;                                     // field-stop / seat land length
+fs_z1    = 0;                                       // seat land top = seating plane
+fs_z0    = fs_z1 - fs_len;                          // -0.8  (its -Z face is the filter seat)
+filt_z1  = fs_z0;                                   // filter +Z (camera-side) face — on the seat
+filt_z0  = filt_z1 - filter_thk;                    // filter -Z (target-side) face
+fring_pitch  = 1.5;
+fring_d      = 17;                                  // filter retainer thread major dia
+fring_nose_h = 2.0;                                 // filter_ring nose: filter face -> its thread shoulder
 // stem thread starts exactly where the ring's body shoulder lands when the nose is
 // on the filter -> full engagement AND zero clamping stress on the 0.55 mm glass.
-fring_z0     = filt_z1 + fring_nose_h;
-fring_engage = is_cmount ? 3.0 : 3.5;              // thread length
-filter_cell_base_z = is_cmount ? 0 : flange_thk;   // where the cell boss starts (+Z)
-filter_boss_d_c    = (filter_boss_d > 0) ? filter_boss_d : fring_d + 2*fring_wall;
-filter_boss_h = fring_z0 + fring_engage + 3.0 - filter_cell_base_z;  // boss height above its base
+fring_z1     = filt_z0 - fring_nose_h;              // ring thread shoulder / stem thread start (-Z)
+fring_engage = 3.5;                                 // thread length
+fring_z0     = fring_z1 - fring_engage;             // -Z end of the stem retainer thread
+cell_z0      = fring_z0 - 2.0;                      // -Z end of the cell (ring lead-in)
+// clear bore through the male thread / flange, toward the detector
+marg_tan     = (clear_aperture_d / 2) / flange_to_optic;   // marginal ray slope
+thread_bore_top = is_cmount ? thread_engage : flange_thk;
+thread_bore_d   = ceil(filter_clear_d + 2 * thread_bore_top * marg_tan + 3);
 
 // ---- sanity checks ----
 assert(clear_aperture_d <= element_d - 2.0,
@@ -172,14 +178,14 @@ assert(barrel_bore + 2*wall <= barrel_od_c + 0.01,
     "barrel_od too small for the bore + 2*wall. Raise barrel_od or drop clear_aperture_d / wall.");
 assert(filter_clear_d + 1.5 <= filter_d,
     "filter_clear_d leaves too little seat rim under the filter.");
-assert(filter_pocket_d + 2 <= filter_boss_d_c && fring_d + 2*fring_wall <= filter_boss_d_c + 0.01,
-    "filter cell is too small for the filter pocket + retainer thread + wall.");
-assert(is_cmount || (filter_boss_d_c < reg_x && filter_boss_d_c < reg_y),
-    "filter cell does not fit through the body register — shrink it or the filter cell.");
-assert(!is_cmount || filter_boss_d_c <= 15.5,
-    "filter cell won't clear a stock Ø16 front-plate bore — shrink fring_d / fring_wall.");
-assert(!is_cmount || fring_d - 1.95*fring_pitch >= filter_pocket_d,
+assert(fring_d - 1.95*fring_pitch >= filter_pocket_d,
     "retainer thread minor diameter clashes the Ø8.6 filter pocket — raise fring_d.");
+assert(fring_d + 2*wall <= neck_od,
+    "filter retainer thread + wall does not fit the stem neck — raise stem_neck_len/join_len (grows neck_od) or drop fring_d.");
+assert(!is_cmount || thread_bore_d + 2*wall <= cmount_male_d - 1,
+    "thread_bore_d leaves too little wall on the male 1\"-32 thread.");
+assert(cell_z0 > socket_bot_z + join_len + 3,
+    "filter cell runs into the stem<->barrel joint — shorten the cell or lengthen stem_neck_len.");
 assert(neck_bore >= cone_d(socket_bot_z) + 2,
     "stem neck bore vignettes the light cone at the joint. Shorten stem_neck_len / join_len.");
 assert(socket_bore + 2*wall <= barrel_od_c,
@@ -198,4 +204,5 @@ echo(is_cmount
      ? str("   mount   C — male 1\"-32, ", thread_engage, " mm engage, shoulder Ø", shoulder_d)
      : str("   mount   flange ", outer_x, " x ", outer_y, " mm"));
 echo(str("   filter  Ø", filter_d, " x ", filter_thk, "   stop Ø", filter_clear_d,
-         "   cell Ø", filter_boss_d_c));
+         "   cell z[", cell_z0, ",0]  ring thread Ø", fring_d,
+         "   thread bore Ø", thread_bore_d));

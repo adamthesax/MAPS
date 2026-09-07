@@ -32,7 +32,7 @@ else {
             lens_retainer();
     }
 
-    // filter + its ring, floated out of the stem toward +Z
-    % translate([0, 0, fs_z1 + explode * 0.5]) cylinder(h = filter_thk, d = filter_d);
-    translate([0, 0, filt_z1 + explode]) filter_ring();
+    // filter + its ring, exploded together out the -Z (barrel) end of the stem cell
+    % translate([0, 0, filt_z0 - explode + 4]) cylinder(h = filter_thk, d = filter_d);
+    translate([0, 0, filt_z0 - explode]) mirror([0, 0, 1]) filter_ring();
 }
