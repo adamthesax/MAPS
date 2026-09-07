@@ -74,24 +74,27 @@ module vr_optical_path() {
 module stem_cmount() {
     difference() {
         union() {
-            // male 1"-32 thread, z = 0 .. thread_engage (into the camera)
+            // male 1"-32 thread, z = 0 .. thread_engage (into the camera).
+            // bevel2 bevels only the OD corner at the tip (BOSL2), for an easy start.
             translate([0, 0, thread_engage/2])
                 threaded_rod(d = cmount_male_d, l = thread_engage,
-                             pitch = CMOUNT_PITCH, internal = false, $fn = 96);
+                             pitch = CMOUNT_PITCH, internal = false,
+                             bevel2 = true, $fn = 96);
             // grip / backstop shoulder, just proud of the seating plane (-Z)
-            translate([0, 0, -shoulder_thk]) cylinder(h = shoulder_thk, d = shoulder_d);
+            translate([0, 0, -shoulder_thk])
+                cylinder(h = shoulder_thk, d = shoulder_d);
             // compact filter-cell boss, toward the detector
             cylinder(h = filter_boss_h, d = filter_boss_d_c);
             // rigid neck, hanging toward -Z (its front join_len is the barrel plug)
             translate([0, 0, stem_end_z]) cylinder(h = -stem_end_z, d = neck_od);
         }
         vr_optical_path();
-        // thread lead-in chamfer at the tip (into the camera)
-        translate([0, 0, thread_engage - 0.01])
-            cylinder(h = 1.2, d1 = cmount_male_d + 0.6, d2 = cmount_male_d - 2.5);
-        // shoulder edge chamfer
-        translate([0, 0, -shoulder_thk - 0.01])
-            cylinder(h = 1.0, d1 = shoulder_d + 1, d2 = shoulder_d - 2);
+        // 45 deg break on the shoulder's outer bottom edge (outer corner only)
+        translate([0, 0, -shoulder_thk])
+            rotate_extrude($fn = 96)
+                polygon([[shoulder_d/2 - 1.2, -0.01],
+                         [shoulder_d/2 + 0.5, -0.01],
+                         [shoulder_d/2 + 0.5,  1.2]]);
     }
 }
 
