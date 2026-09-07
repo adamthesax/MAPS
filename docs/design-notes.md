@@ -131,7 +131,11 @@ planned follow-up (a threaded element cell inside the barrel). Full write-up:
 
 - Sensor tilt (non-perpendicularity) is controlled only by print flatness of the ledge and
   carrier — no 3-point adjustment yet.
-- Tripod boss is on the rear cap edge; not under the centre of mass.
+- Tripod boss is on the rear cap edge; not under the centre of mass. The body −Y
+  accessory rail (`accessory_rail.scad`) is the better load path — a NATO clamp on it
+  slides to the balance point. See [modularity.md](modularity.md#the-accessory-mount-interface-secondary).
+- Accessory-rail dovetail dims are nominal (there is no published NATO spec); check
+  them against a real clamp before relying on the fit.
 - No gasket groove modelled — sealing is a foam/O-ring pad against flat faces.
 - Thermal: no vents or heatsink boss. Fine for low-power global-shutter/rolling sensors
   indoors; revisit for continuous outdoor sun.

@@ -3,6 +3,7 @@
 
 include <params.scad>
 use <interface.scad>
+use <accessory_rail.scad>
 use <../util.scad>
 use <../hardware.scad>
 
@@ -16,6 +17,8 @@ module body() {
             union() {
                 translate([0, 0, fz]) rprism(outer_x, outer_y, bl, r = corner_r);
                 translate([0, 0, fz]) corner_ears(bl);
+                // NATO accessory rail on the -Y face (see accessory_rail.scad)
+                if (acc_rail) nato_rail(-outer_y/2, fz, bl);
             }
             // main cavity
             translate([0, 0, fz - 1])
@@ -27,6 +30,9 @@ module body() {
             // heat-set pockets: front inserts open toward -Z, rear open toward +Z
             translate([0, 0, fz])      mate_screws("insert-down");
             translate([0, 0, fz + bl]) mate_screws("insert-up");
+            // M3 pockets down the accessory-rail crown
+            if (acc_rail && acc_rail_holes)
+                nato_rail_pockets(-outer_y/2, fz, bl, acc_rail_pitch);
         }
 
         // carrier support ledge: two ribs on the +/-X inner walls, top face at ledge_z

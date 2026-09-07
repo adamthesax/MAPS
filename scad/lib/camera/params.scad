@@ -44,6 +44,11 @@ desiccant_pocket = true;  // internal pocket for a silica-gel pack
 /* [Base mount] */
 tripod_insert = true;     // 1/4"-20 heat-set insert in the rear cap floor
 
+/* [Accessory rail] */
+acc_rail       = true;    // NATO-style dovetail down the body -Y face
+acc_rail_holes = true;    // row of M3 inserts in the rail crown (adapter bolt points)
+acc_rail_pitch = 12;      // [8:1:24] spacing of the crown M3 holes, mm
+
 /* [Back-focus shims] */
 shim_values = [0.1, 0.1, 0.2, 0.2, 0.5];  // one printed shim per entry
 shim_nominal = 0.6;       // nominal stack designed-in (sum you can add or remove)

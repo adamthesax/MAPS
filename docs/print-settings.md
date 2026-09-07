@@ -26,11 +26,11 @@
 | Part | Orientation | Note |
 |---|---|---|
 | `front` | **thread axis vertical**, lens tower up | clean thread, no bridging over the bore |
-| `body` | open end up (either end) | register pockets bridge fine at ≤ 3 mm; add a 0.3 mm ledge chamfer if sagging |
+| `body` | open end up (either end) | register pockets bridge fine at ≤ 3 mm; add a 0.3 mm ledge chamfer if sagging. Accessory rail runs vertical in this pose → dovetail prints clean, no supports |
 | `carrier` | floor down, standoffs up | |
 | `rear` | outside face down | gland hole bridges; fine |
 | `shims` | flat | print one sheet; they're fragile — handle with tweezers |
-| `base` | flat, countersinks up | |
+| `base` | plate flat on the bed, boss + countersinks up | boss prints unsupported; the pocket floor bridges its Ø4 vent fine |
 
 ## Post-processing
 
