@@ -31,14 +31,19 @@ M3_HEATSET_D  = 4.0;   M3_HEATSET_H  = 5.0;
 INSERT_1420_D = 8.0;   INSERT_1420_H = 10.0;
 
 // ---------------------------------------------------------------------------
-// NATO accessory rail — de facto camera-gear standard. A smooth 45 deg dovetail
-// (wider at the head); a bought or printed NATO clamp grips the flanks. There is
-// no published spec, so these are nominal — verify against the clamp you'll use.
+// NATO accessory rail — Picatinny / STANAG 4694 family clamping profile, run
+// smooth (no recoil grooves) and low. A bought or printed NATO clamp grips the
+// upper 45 deg chamfers; the width across them is the Picatinny 21.2 mm so
+// off-the-shelf clamps fit. MIL-STD-1913 does not fix a height, so it is kept
+// low here. Still worth a test fit against your actual clamp before committing.
 // ---------------------------------------------------------------------------
-NATO_W_BASE = 10.0;   // rail width at the mounting face
-NATO_W_HEAD = 14.0;   // width across the dovetail (widest point)
-NATO_H      = 6.5;    // height proud of the face
-NATO_NECK   = 2.0;    // straight neck below the 45 deg flare
+NATO_W_MAX  = 21.2;   // width across the 45 deg clamp chamfers   (0.835 in)
+NATO_W_TOP  = 15.7;   // top flat                                 (~0.617 in)
+NATO_W_BASE = 18.5;   // rail footprint where it meets the face
+NATO_TIP    = 0.5;    // vertical land at the widest point (no knife edge)
+NATO_NECK   = 1.0;    // vertical web between the face and the lower chamfer
+NATO_H      = NATO_NECK + (NATO_W_MAX - NATO_W_BASE)/2 + NATO_TIP
+                       + (NATO_W_MAX - NATO_W_TOP)/2;   // falls out at 45 deg
 
 // Common cable gland panel-hole diameters (metric PG series)
 function gland_hole_d(g) =

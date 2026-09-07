@@ -118,11 +118,13 @@ focus is still the camera's shim stack plus (for a real lens) the focus ring.
   accessory rail (`accessory_rail.scad`, `-Y` by default) is the better load path — a
   NATO clamp on it slides to the balance point. See
   [modularity.md](modularity.md#the-accessory-mount-interface-secondary).
-- Accessory-rail dovetail: the 45° flank geometry is the same family as the military
-  Picatinny (MIL-STD-1913) / STANAG 4694 rails, but the camera-gear "NATO rail" is a
-  downsized de-facto profile with no single published civilian spec. `NATO_*` in
-  `constants.scad` are nominal — pin them to a specific clamp maker's drawing (or to
-  full MIL-STD-1913 if you'd rather use firearms-world clamps) before printing for fit.
+- Accessory-rail profile: the camera "NATO rail" is the Picatinny / STANAG 4694
+  clamping geometry run smooth (no recoil grooves) and low. `NATO_*` in
+  `constants.scad` use the published **21.2 mm** clamp-chamfer width and 45° flanks so
+  off-the-shelf NATO clamps fit; MIL-STD-1913 fixes no height, so it is kept low
+  (~5.6 mm). Still test-fit an actual clamp before a production run — jaw depth and
+  chamfer land vary between makers. Add the recoil grooves + go to full width if you
+  want to use firearms-world clamps instead.
 - No gasket groove modelled — sealing is a foam/O-ring pad against flat faces.
 - Thermal: no vents or heatsink boss. Fine for low-power global-shutter/rolling sensors
   indoors; revisit for continuous outdoor sun.

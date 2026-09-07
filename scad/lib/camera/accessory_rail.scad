@@ -14,19 +14,21 @@ include <../constants.scad>
 use <../hardware.scad>
 
 // 2D cross-section. X = rail width, Y = distance out from the face (<= 0, i.e. -Y).
+// Picatinny-family hex top: web -> 45 deg out to NATO_W_MAX -> 45 deg in to the
+// NATO_W_TOP flat. The clamp grips the upper chamfers (W_MAX -> W_TOP).
 module nato_section() {
-    fl = (NATO_W_HEAD - NATO_W_BASE) / 2;   // 45 deg -> rise == run
-    ch = 0.7;                               // crown edge break
+    f1 = (NATO_W_MAX - NATO_W_BASE) / 2;
+    f2 = (NATO_W_MAX - NATO_W_TOP) / 2;
+    y1 = -NATO_NECK;             // top of the web
+    y2 = y1 - f1;                // widest point, lower
+    y3 = y2 - NATO_TIP;          // widest point, upper
+    y4 = -NATO_H;                // top flat
     polygon([
-        [-NATO_W_BASE/2, 0], [ NATO_W_BASE/2, 0],
-        [ NATO_W_BASE/2, -NATO_NECK],
-        [ NATO_W_HEAD/2, -NATO_NECK - fl],
-        [ NATO_W_HEAD/2, -NATO_H + ch],
-        [ NATO_W_HEAD/2 - ch, -NATO_H],
-        [-NATO_W_HEAD/2 + ch, -NATO_H],
-        [-NATO_W_HEAD/2, -NATO_H + ch],
-        [-NATO_W_HEAD/2, -NATO_NECK - fl],
-        [-NATO_W_BASE/2, -NATO_NECK],
+        [-NATO_W_BASE/2, 0 ], [-NATO_W_BASE/2, y1],
+        [-NATO_W_MAX/2,  y2], [-NATO_W_MAX/2,  y3],
+        [-NATO_W_TOP/2,  y4], [ NATO_W_TOP/2,  y4],
+        [ NATO_W_MAX/2,  y3], [ NATO_W_MAX/2,  y2],
+        [ NATO_W_BASE/2, y1], [ NATO_W_BASE/2, 0 ],
     ]);
 }
 
@@ -50,7 +52,9 @@ module nato_rail(half, z0, len) {
             nato_section();
 }
 
-// crown M3 pockets (recessed so a flush insert never fouls a clamp)
+// crown M3 pockets: mouth on the top flat with a shallow relief so a flush insert
+// never fouls a clamp. The rail is low, so the pocket bottoms a mm or two into the
+// host wall behind it — that is fine, it just anchors the insert deeper.
 module nato_pockets(half, z0, len, pitch) {
     for (z = nato_hole_zs(z0, len, pitch))
         translate([0, -half - NATO_H - 0.01, z])

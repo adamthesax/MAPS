@@ -44,7 +44,7 @@ any of its four side faces, full length, defined in
 
 | Feature | Value | Notes |
 |---|---|---|
-| Profile | smooth 45° dovetail, `NATO_W_BASE`=10 → `NATO_W_HEAD`=14, `NATO_H`=6.5 proud | nominal — verify against the clamp you'll use (see design-notes) |
+| Profile | Picatinny/STANAG-family hex top: 45° chamfers, `NATO_W_MAX`=21.2 across the clamp faces, `NATO_W_TOP`=15.7 flat, ~5.6 proud, smooth | test-fit your clamp first (see design-notes) |
 | Faces | `acc_rail_faces`, any of `"-Y"` `"+Y"` `"-X"` `"+X"` (default `["-Y"]`) | −Y is the natural "down"; add faces for a cage-style rig |
 | Crown holes | `acc_rail_holes` on/off; row spaced ≤ `acc_rail_pitch` (default 12 mm), anchored at both ends | end holes take clamp stop-screws, interior holes are adapter bolt points |
 | Ends | both open, no dam | clamp held by jaw friction + a stop screw in an end crown hole |
