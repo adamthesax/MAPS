@@ -110,17 +110,16 @@
     {
       "name": "vibrometer_80mm",
       "type": "receiver",
-      "title": "Ø80 f150 receiver, fixed focus, 808 nm filter, 39 mm body",
+      "title": "Ø80 f150 receiver, fixed focus, 808 nm filter, C-mount",
       "params": {
+        "mount": "C",
         "element_d": 80,
         "clear_aperture_d": 74,
         "focal_length": 150,
         "flange_to_optic": 150,
         "filter_d": 8.0,
         "filter_thk": 0.55,
-        "filter_clear_d": 6.0,
-        "body_outer_x": 39,
-        "body_outer_y": 39
+        "filter_clear_d": 6.0
       }
     }
   ]
