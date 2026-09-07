@@ -1,19 +1,23 @@
 type  = "receiver"
-title = "Ø80 f150 receiver, fixed focus, 808 nm filter, 39 mm body"
+title = "Ø80 f150 receiver, fixed focus, 808 nm filter, C-mount"
 
 # Receiver telescope for the M.A.P.S. laser vibrometer (see docs/receiver-optic.md).
 # A bought Ø80 mm, f≈150 mm optic focuses the return beam through an 8 mm 808 nm
-# bandpass filter onto a BPW34 on a stock generic_29mm body.
+# bandpass filter onto a BPW34 on a stock generic_29mm_c body.
 #
-# FIXED FOCUS: one rigid tube. `stem` (body interface + filter cell) plugs into the
-# rear of `barrel` (holds the optic) and is pinned with 3 screws. Focus control is a
-# later pass — most likely by moving the element inside the barrel.
+# C-MOUNT: the `stem` ends in a male 1"-32 thread and screws straight into a stock
+# generic_29mm_c front plate (lens_mount_style = "thread") — no custom front plate.
+#
+# FIXED FOCUS: one rigid tube. `stem` (camera interface + filter cell) plugs into
+# the rear of `barrel` (holds the optic) and is pinned with 3 screws. Focus control
+# is a later pass — most likely by moving the element inside the barrel.
 #
 # GUESSED — measure the real optic and update:
 #   element_edge_thk  rim thickness of the Ø80 optic (seat depth)
 #   element_sag       how far the convex face bulges past the rim
 # Filter is spec'd: 808 nm narrow BP, Ø8.0 x 0.55 mm glass, CWL 808+/-2, HBW 25 nm.
 [params]
+mount            = "C"
 element_d        = 80
 clear_aperture_d = 74
 focal_length     = 150
@@ -21,5 +25,3 @@ flange_to_optic  = 150
 filter_d         = 8.0
 filter_thk       = 0.55
 filter_clear_d   = 6.0
-body_outer_x     = 39
-body_outer_y     = 39

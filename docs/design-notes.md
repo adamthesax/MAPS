@@ -115,12 +115,15 @@ focus is still the camera's shim stack plus (for a real lens) the focus ring.
 `mapscam` also prints a **large-aperture receiver telescope** for the M.A.P.S. laser
 vibrometer: a bought Ø80 mm f≈150 mm optic, feeding the return beam through an 8 mm
 808 nm bandpass filter to a detector on a stock `body`. **Fixed focus for now** — one
-rigid tube: a short `stem` (body interface + filter cell) plugs into the rear of the
+rigid tube: a short `stem` (camera interface + filter cell) plugs into the rear of the
 long `barrel` (holds the optic) and is pinned with 3 screws. Separate component
-*type* (`components/receiver/*.toml`, `scad/lib/receiver/`); it reuses the camera
-register + M3 pattern so the stem is a `front_plate` peer. Focus control is a planned
-follow-up (a threaded element cell inside the barrel). Full write-up:
-[receiver-optic.md](receiver-optic.md).
+*type* (`components/receiver/*.toml`, `scad/lib/receiver/`). By default (`mount = "C"`)
+the stem ends in a **male 1"-32 thread** and screws straight into a stock
+`generic_29mm_c` front plate — the receiver is just a C-mount lens, no custom plate;
+the slim filter cell passes through the front-plate bore. `mount = "flange"` keeps the
+alternative: the stem carries its own `front_plate`-peer register + M3 pattern and
+bolts to a bare body. Focus control is a planned follow-up (a threaded element cell
+inside the barrel). Full write-up: [receiver-optic.md](receiver-optic.md).
 
 ## Known limitations of v0.1
 
