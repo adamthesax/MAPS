@@ -20,9 +20,9 @@ components/
 
 | File | Committed? | What |
 |---|---|---|
-| `scad/variants/<name>.scad` | yes | `include params` → overrides → `include dispatch` stub; the `make` / Customizer target |
+| `scad/variants/<name>.scad` | yes | `include params` → re-assign → `include dispatch` stub — the Customizer target (the `make` render path also passes `DFLAGS_<name>`, see modularity.md) |
 | `components.json` | yes | flat manifest of every type + component |
-| `build/components.mk` | no (git-ignored) | `ALL_VARIANTS`, `PARTS_<name>`, `PREVIEW_CAM_<name>`, `CHECK_JOBS`, … included by the `Makefile` |
+| `build/components.mk` | no (git-ignored) | `ALL_VARIANTS`, `PARTS_<name>`, `PREVIEW_CAM_<name>`, `CHECK_JOBS`, `DFLAGS_<name>` (the TOML overrides as `-D` flags), … included by the `Makefile` |
 | `README.md` (between `<!-- … GENERATED:components … -->`) | yes | the component tables |
 
 Run `make gen` after editing any TOML. `make` and `make check` run it automatically;

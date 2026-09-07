@@ -28,8 +28,11 @@ For ad hoc CLI runs, set it yourself. BOSL2 is a git submodule (`make vendor` to
 3. **The module interface is law.** `scad/lib/interface.scad` defines the register + bolt
    pattern + Z convention shared by front/body/rear. New modules honour it — see
    `docs/modularity.md`.
-4. **`params.scad` uses plain assignments** so the Customizer works. Variants override by
-   `include params` → re-assign → `include dispatch`. CLI overrides via `-D`.
+4. **`params.scad` uses plain assignments** so the Customizer works. A variant's TOML
+   overrides reach the geometry only as `-D` flags — `tools/gen.py` bakes them into
+   `build/components.mk` (`DFLAGS_<name>`) and the `Makefile` passes them on every render.
+   The stub's in-file re-assignments are Customizer-only (they don't cross `use <>`; see
+   `docs/modularity.md`). `make check` guards this with `check-overrides`.
 5. **Parts must render 2-manifold individually.** The `assembly` view may not (coincident
    mating faces) — it's preview only, not for STL export.
 
