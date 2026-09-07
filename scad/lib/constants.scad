@@ -30,6 +30,16 @@ M3_HEATSET_D  = 4.0;   M3_HEATSET_H  = 5.0;
 // 1/4"-20 UNC photo/tripod thread, as a brass heat-set insert
 INSERT_1420_D = 8.0;   INSERT_1420_H = 10.0;
 
+// ---------------------------------------------------------------------------
+// NATO accessory rail — de facto camera-gear standard. A smooth 45 deg dovetail
+// (wider at the head); a bought or printed NATO clamp grips the flanks. There is
+// no published spec, so these are nominal — verify against the clamp you'll use.
+// ---------------------------------------------------------------------------
+NATO_W_BASE = 10.0;   // rail width at the mounting face
+NATO_W_HEAD = 14.0;   // width across the dovetail (widest point)
+NATO_H      = 6.5;    // height proud of the face
+NATO_NECK   = 2.0;    // straight neck below the 45 deg flare
+
 // Common cable gland panel-hole diameters (metric PG series)
 function gland_hole_d(g) =
     (g == "PG9")  ? 15.2 :

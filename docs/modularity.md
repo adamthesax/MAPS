@@ -35,6 +35,33 @@ so `dispatch.scad` can just draw them all together for the assembly view.
 > helpers (`constants.scad`, `util.scad`, `hardware.scad`) stay in `scad/lib/` and are
 > included as `../constants.scad` from inside `lib/camera/`.
 
+## The accessory mount interface (secondary)
+
+Separate from the register above. The `body` carries a **NATO-style dovetail** down
+its **−Y face**, full length, defined in `scad/lib/camera/accessory_rail.scad`
+(profile constants in `constants.scad`, `NATO_*`).
+
+| Feature | Value | Notes |
+|---|---|---|
+| Profile | smooth 45° dovetail, `NATO_W_BASE`=10 → `NATO_W_HEAD`=14, `NATO_H`=6.5 proud | no published spec — verify against your clamp |
+| Crown holes | one row of M3 inserts, `acc_rail_pitch` (default 12 mm) | adapter bolt points; the end holes take clamp stop-screws |
+| Fixed stop | integral dam at the front (`z0`) end | slide the clamp on from the rear |
+
+Two ways to hang something off it:
+
+1. **NATO clamp** (bought or printed) grips the 45° flanks — slides along the rail,
+   so you park it at the balance point for whatever lens is fitted. This is the
+   answer to "the tripod boss isn't under the centre of mass".
+2. **Bolt-on adapter** — screws to the crown M3s. Give the adapter a stub dovetail
+   foot too, so the flanks take shear + anti-rotation and the M3 is just retention;
+   the same adapter then works clamped or bolted. Keep bolt-on loads light (cold
+   shoe, bracket, antenna); a camera + lens on a tripod should go through a clamp.
+
+`acc_rail` / `acc_rail_holes` / `acc_rail_pitch` are in `params.scad`; the rail is
+on by default for every camera variant. Use `-D acc_rail=false` for a build without
+it. The rail geometry takes `body_length` from the body it sits on, so it always
+spans the full module regardless of variant.
+
 ## Adding a new module
 
 1. `include <params.scad>; use <interface.scad>; use <../util.scad>;` (in `scad/lib/camera/`)

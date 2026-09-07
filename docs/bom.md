@@ -18,7 +18,7 @@ Per camera, `generic_29mm_c` baseline. Quantities scale with your board.
 
 | Item | Qty | Spec |
 |---|---|---|
-| Heat-set insert, M3 × L5 (OD ≈ 4.0) | 8 | body: 4 front + 4 rear |
+| Heat-set insert, M3 × L5 (OD ≈ 4.0) | 8 + 2–3 | body: 4 front + 4 rear; +2–3 in the accessory-rail crown |
 | Heat-set insert, M2 × L4 (OD ≈ 3.2) | 4 | carrier standoffs (PCB screws) |
 | Heat-set insert, 1/4"-20 (OD ≈ 8.0, L10) | 1–2 | rear cap edge (tripod); +1 in the `base` boss if wall-mounting |
 | Cap screw, M3 × 8 | 4 | front plate → body |
@@ -35,6 +35,8 @@ Per camera, `generic_29mm_c` baseline. Quantities scale with your board.
 | Foam or O-ring gasket stock | ~0.3 m | between register faces if you need light/dust sealing |
 | Silica gel pack, ~1 g | 1 | fits the rear-cap desiccant pocket |
 | C-mount lens | 1 | image circle must cover your sensor diagonal |
+| NATO clamp (bought or printed) | 0–1 | grips the body −Y accessory rail; carries your 1/4"-20 / arm / arca plate |
+| Screw for accessory-rail stop | 1–2 | M3 button head in the end crown holes, backs out the clamp travel |
 
 ## Consumables
 

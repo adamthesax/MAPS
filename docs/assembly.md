@@ -5,6 +5,8 @@ Tools: soldering iron with heat-set tip, 1.5/2 mm hex drivers, tweezers, caliper
 ## 1. Inserts
 
 - Body: 8 × M3 inserts (4 each end), flush and square.
+- Body accessory rail: 2–3 × M3 inserts in the −Y rail crown, flush or a hair below
+  (a proud insert fouls a NATO clamp).
 - Carrier: 4 × M2 inserts in the standoff tops.
 - Rear cap: 1 × 1/4"-20 insert in the edge boss.
 - Wall bracket (optional): 1 × 1/4"-20 insert in the central boss, pressed in from the
@@ -45,6 +47,10 @@ Thread the C-mount lens in. Then follow [calibration.md](calibration.md) to set 
 
 ## 7. Mount
 
+- Accessory rail (−Y face): slide a NATO clamp on from the rear until it hits the front
+  dam, then fit an M3 stop screw in the rearmost crown hole. Park the clamp at the
+  balance point for your lens. The clamp carries whatever you want — 1/4"-20, arca plate,
+  arm. Or bolt a light adapter straight to the crown M3s.
 - Tripod / CCTV arm: 1/4"-20 in the rear-cap edge.
 - Wall / ceiling: print `base`, heat-set a 1/4"-20 insert in its boss, screw the plate flat
   to the surface (screw heads countersink into the boss face), then thread a 1/4"-20 stud
