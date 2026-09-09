@@ -51,18 +51,20 @@ stl: build/.gen-stamp $(STLS)
 
 renders: build/.gen-stamp $(PNGS)
 
+# DFLAGS_<variant> (from build/components.mk) carries the TOML overrides as -D
+# flags — a plain re-assignment in the stub never reaches `use`d part modules.
 $(STL_DIR)/%.stl:
 	@mkdir -p $(STL_DIR)
 	$(eval V := $(word 1,$(subst -, ,$*)))
 	$(eval P := $(word 2,$(subst -, ,$*)))
 	$(OPENSCAD) $(RENDER_FLAGS) --hardwarnings -o $@ \
-		-D 'part="$(P)"' scad/variants/$(V).scad
+		$(DFLAGS_$(V)) -D 'part="$(P)"' scad/variants/$(V).scad
 
 $(PNG_DIR)/%.png: scad/variants/%.scad
 	@mkdir -p $(PNG_DIR)
 	$(OPENSCAD) $(RENDER_FLAGS) -o $@ --imgsize=1000,750 \
 		--colorscheme=Tomorrow --view=axes \
-		--camera=$(PREVIEW_CAM_$*) $<
+		$(DFLAGS_$*) --camera=$(PREVIEW_CAM_$*) $<
 
 # per-component convenience target
 define VARIANT_rule
@@ -70,17 +72,37 @@ $(1): build/.gen-stamp $(foreach p,$(PARTS_$(1)),$(STL_DIR)/$(1)-$(p).stl) $(PNG
 endef
 $(foreach v,$(ALL_VARIANTS),$(eval $(call VARIANT_rule,$(v))))
 
-# CI gate: generated files current, then render every component/part to a throwaway echo
-# file with --hardwarnings. Any warning or failed assert makes openscad exit non-zero.
-check: gen-check build/.gen-stamp
+# CI gate: generated files current, overrides actually propagate, then render every
+# component/part to a throwaway echo file with --hardwarnings. Any warning or failed
+# assert makes openscad exit non-zero. $(foreach) (not a shell loop) so make can
+# resolve each job's $(DFLAGS_<variant>).
+check: gen-check build/.gen-stamp check-overrides
 	@set -e; \
-	for job in $(CHECK_JOBS); do \
-	  v=$${job%/*}; p=$${job#*/}; \
-	  echo ">> $$v / $$p"; \
+	$(foreach j,$(CHECK_JOBS), \
+	  echo ">> $(subst /, / ,$(j))"; \
 	  $(OPENSCAD) $(RENDER_FLAGS) --hardwarnings -o /tmp/mapscam-check.echo \
-	    -D "part=\"$$p\"" scad/variants/$$v.scad; \
-	done; \
+	    $(DFLAGS_$(firstword $(subst /, ,$(j)))) -D 'part="$(lastword $(subst /, ,$(j)))"' \
+	    scad/variants/$(firstword $(subst /, ,$(j))).scad; ) \
 	echo "OK — all components render clean"
+
+# Regression guard for the -D propagation: the CS body is 5 mm shorter than the C
+# body (mount_type -> flange-focal-distance stack -> body_length). If the override
+# does not reach the geometry both come out at the C length. Compare the STL Z
+# extents, not bytes — CGAL tessellation is not deterministic between runs.
+zext = awk '/vertex/{z=$$4; if(n++==0){lo=hi=z}; if(z<lo)lo=z; if(z>hi)hi=z} END{printf "%.1f", hi-lo}' $(1)
+
+.PHONY: check-overrides
+check-overrides: build/.gen-stamp
+	@echo ">> variant override propagation"
+ifneq (,$(and $(filter generic_29mm_c,$(ALL_VARIANTS)),$(filter generic_29mm_cs,$(ALL_VARIANTS))))
+	@$(OPENSCAD) $(RENDER_FLAGS) -o /tmp/mapscam-ov-c.stl  $(DFLAGS_generic_29mm_c)  -D 'part="body"' scad/variants/generic_29mm_c.scad  >/dev/null 2>&1
+	@$(OPENSCAD) $(RENDER_FLAGS) -o /tmp/mapscam-ov-cs.stl $(DFLAGS_generic_29mm_cs) -D 'part="body"' scad/variants/generic_29mm_cs.scad >/dev/null 2>&1
+	@c=`$(call zext,/tmp/mapscam-ov-c.stl)`; s=`$(call zext,/tmp/mapscam-ov-cs.stl)`; \
+	 echo "   C body length $$c mm,  CS body length $$s mm"; \
+	 [ "$$c" != "$$s" ] || { echo "   FAIL: identical — variant overrides are not reaching geometry"; exit 1; }
+else
+	@echo "   skipped — canonical generic_29mm_c / _cs test variants not present"
+endif
 
 vendor:
 	git submodule update --init --recursive

@@ -84,6 +84,24 @@ size, hole pitch, mount type/style, gland), run `make gen`, then `make <name>`. 
 
 `params.scad` uses **plain assignments** so the OpenSCAD Customizer works. A generated
 variant stub does `include <../lib/camera/params.scad>` **first**, then re-assigns the few
-parameters the TOML pins, then `include <../lib/camera/dispatch.scad>`. OpenSCAD's "last
-assignment wins" rule makes the override stick. On the command line, `-D 'name=value'`
-beats both.
+parameters the TOML pins, then `include <../lib/camera/dispatch.scad>`.
+
+That re-assignment alone does **not** reach the geometry. `dispatch.scad` pulls the part
+modules with `use <body.scad>` etc., and OpenSCAD resolves a `use`d module's free
+variables (`body_length`, `outer_x`, `mount_type`, the whole derived stack…) against **its
+own definition scope** — i.e. the *defaults* from that part file's own
+`include <params.scad>` — not the stub's scope. A `-D name=value` on the command line is
+applied globally and *does* reach `use`d modules.
+
+So the real path: `tools/gen.py` emits each variant's TOML overrides as `-D` flags
+(`DFLAGS_<name>` in `build/components.mk`) and the `Makefile` passes them on **every**
+`openscad` call — STL, preview PNG, and the `make check` loop. Any `openscad` you run by
+hand on a stub needs the same flags (`grep DFLAGS_<name> build/components.mk`), or just run
+it on `scad/camera.scad` with your own `-D`.
+
+The stub's in-file assignments keep it a valid Customizer target and feed `params.scad`'s
+own `echo`/`assert`s, but a live Customizer edit hits the same `use <>` scope wall — a
+fully faithful interactive Customizer would need the part files to stop self-including
+`params.scad` (left as future work). `make check` has a `check-overrides` guard that fails
+if the C and CS `body` render to the same length — which is exactly what happens if the
+`-D` flags stop being applied.
