@@ -13,9 +13,8 @@ use <../util.scad>
 use <../hardware.scad>
 use <../threads.scad>
 
-taper_len = 14;                                 // blend from barrel OD down to the socket
 cell_h    = element_edge_thk + retainer_engage + front_rim;
-socket_od = socket_bore + 2*wall;
+// socket_od, taper_len — computed in params.scad ("stem <-> barrel joint").
 
 module barrel() {
     socket_z0  = barrel_len - join_len;         // socket starts here (local z)

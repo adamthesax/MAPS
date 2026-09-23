@@ -141,6 +141,16 @@ socket_bot_z   = -stem_neck_len - join_len;            // deepest point of the s
 neck_bore      = ceil(cone_d(socket_bot_z) + 4);       // clears the cone at the socket bottom
 neck_od        = neck_bore + 2*wall;
 socket_bore    = neck_od + 2*join_fit;
+socket_od      = socket_bore + 2*wall;                 // barrel wall around the socket
+
+// Axial length of the barrel's OD->socket blend. The barrel prints optic-end-down,
+// so the INNER face of this cone cantilevers inward over the main bore as it climbs
+// — a support-free FDM overhang needs it no steeper than 45 deg from vertical.
+// Sized from the OD drop, which is never smaller than the bore drop (barrel_bore <=
+// barrel_od - 2*wall), so the bore taper is <= 45 deg too. Floor at 14 mm so small
+// stacks still get a real blend.
+taper_len       = max(14, (barrel_od_c - socket_od) / 2);
+taper_from_vert = atan2((barrel_bore - socket_bore) / 2, taper_len);   // bore overhang
 
 shoulder_d     = max(neck_od + 6, 30);                 // "C" grip / thread backstop disc
 
@@ -204,6 +214,8 @@ assert(neck_bore >= cone_d(socket_bot_z) + 2,
     "stem neck bore vignettes the light cone at the joint. Shorten stem_neck_len / join_len.");
 assert(socket_bore + 2*wall <= barrel_od_c,
     "barrel wall around the stem socket is thinner than `wall`.");
+assert(barrel_bore >= cone_d(-flange_to_optic + barrel_len - join_len - taper_len) + 2,
+    "barrel bore taper starts too early and vignettes the light cone — shorten taper_len.");
 assert(barrel_len > join_len + 20,
     "flange_to_optic too short for this barrel.");
 assert(stem_neck_len > 4,
@@ -214,6 +226,8 @@ echo(str("== mapscam receiver ==  element Ø", element_d, " f", focal_length,
 echo(str("   barrel  Ø", barrel_od_c, " x ", barrel_len, " mm   bore Ø", barrel_bore));
 echo(str("   stem    neck Ø", neck_od, " (bore Ø", neck_bore, ")   plug ", join_len,
          " mm x3 ", join_screw));
+echo(str("   taper   ", taper_len, " mm blend, bore ", taper_from_vert,
+         " deg from vertical (<=45 prints support-free, optic-end-down)"));
 echo(is_cmount
      ? str("   mount   C — male 1\"-32, ", thread_engage, " mm engage, shoulder Ø", shoulder_d)
      : str("   mount   flange ", outer_x, " x ", outer_y, " mm"));

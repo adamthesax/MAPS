@@ -84,7 +84,14 @@ cone_d(z)      = clear_aperture_d · |z| / flange_to_optic   // the light cone b
 neck_bore      = ceil(cone_d(−stem_neck_len − join_len) + 4) // must clear the cone at the joint
 neck_od        = neck_bore + 2·wall
 socket_bore    = neck_od + 2·join_fit
+socket_od      = socket_bore + 2·wall
+taper_len      = max(14, (barrel_od − socket_od) / 2)  // OD→socket blend, ≤45° from vertical
 ```
+
+`taper_len` is set from the radial drop, not fixed, so the barrel's OD→socket cone
+is never steeper than 45° from vertical. The barrel prints **optic-end-down**; that
+cone's inner face leans in over the main bore as it rises, and ≤45° keeps it
+support-free. Bigger optic → bigger drop → longer blend, automatically.
 
 Why the barrel is most of the tube: the f/1.9 cone is still ~Ø45 only 60 mm behind
 the optic, so any tube back there has to be wide. The Ø90 barrel bore carries it
@@ -104,7 +111,7 @@ or `flange_to_optic` is too short for the barrel.
 | Part | Prints | Notes |
 |---|---|---|
 | `stem` | 1 | camera interface (`"C"` male 1"-32 + grip shoulder, or `"flange"` register) + filter cell in the neck root + Ø28 neck. Print shoulder/flange-down; no support. |
-| `barrel` | 1 | Ø90 × ~145 mm; optic cell + tube + rear socket. Print optic-end-down. Big — budget time / filament. |
+| `barrel` | 1 | Ø91 × ~149 mm; optic cell + tube + rear socket, OD→socket blend held to ≤45°. Print optic-end-down, no support, **with a 5–8 mm brim** (the chamfered mouth leaves only a ~2 mm ring on the bed). Big — budget time / filament. |
 | `lens_retainer` | 1 | threaded ring: loads from the front (muzzle) end, screws into the barrel's internal thread, and clamps the optic back onto its seat rim (same scheme as `scad/lib/lens/retainer.scad`). |
 | `filter_ring` | 1 | top-hat: a Ø8.1 nose drops onto the filter, the Ø17 threaded body engages the stem. Turn from the −Z (barrel) end. |
 
