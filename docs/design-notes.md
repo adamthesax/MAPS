@@ -105,7 +105,8 @@ focus is still the camera's shim stack plus (for a real lens) the focus ring.
 ### Limitations
 
 - Fixed focus — no printed helicoid yet. A moving `focus_ring` group is a planned follow-up.
-- The retainer thread is a coarse (1 mm pitch) printed thread; the optional front
+- The retainer thread is a printed `print_thread()` pair (1.5 mm pitch, 45° flanks —
+  [printable-threads.md](printable-threads.md)); the optional front
   `filter_thread` is modelled at true 0.5 mm pitch and prints marginally on FDM, same
   caveat as the printed C-mount thread.
 - No baffles / internal blackening geometry; paint the bore or add a flock liner.

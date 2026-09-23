@@ -32,6 +32,11 @@
 | `shims` | flat | print one sheet; they're fragile — handle with tweezers |
 | `base` | plate flat on the bed, boss + countersinks up | boss prints unsupported; the pocket floor bridges its Ø4 vent fine |
 
+Threads: see [printable-threads.md](printable-threads.md). Print every threaded part
+**thread axis vertical**. That covers the receiver `barrel` optic-end-down, its
+`lens_retainer` flat with the clamp face on the bed, and the `filter_ring` standing on
+its nose.
+
 ## Post-processing
 
 1. Install heat-set inserts with a soldering iron + insert tip. Press square. Let cool

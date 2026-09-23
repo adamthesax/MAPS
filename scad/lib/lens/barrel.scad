@@ -9,6 +9,7 @@ include <params.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 use <../util.scad>
+use <../threads.scad>
 
 module barrel() {
     body_top = barrel_front_z - (has_filter ? filter_len : 0);
@@ -16,6 +17,7 @@ module barrel() {
     difference() {
         union() {
             // rear male 1"-32 thread
+            // interchange: 1"-32 UN C-mount — mates the camera front plate
             translate([0, 0, -thread_engage / 2])
                 threaded_rod(d = CMOUNT_MAJOR_D - 2 * thread_clearance,
                              l = thread_engage, pitch = CMOUNT_PITCH,
@@ -23,6 +25,7 @@ module barrel() {
             // main barrel
             cylinder(h = body_top, d = barrel_od_c);
             // optional external front filter thread (turned to filter_major)
+            // interchange: Mxx x0.5 photo filter thread — mates a bought filter
             if (has_filter)
                 translate([0, 0, barrel_front_z - filter_len / 2])
                     threaded_rod(d = filter_major, l = filter_len,
@@ -37,15 +40,14 @@ module barrel() {
         translate([0, 0, seat_z])
             cylinder(h = group_thk + 0.02, d = bore_d);
 
-        // internal retainer thread (coarse printed pitch)
+        // internal retainer thread — printed pair, print_thread() carries the clearance
         translate([0, 0, retainer_z0 + retainer_engage / 2])
-            threaded_rod(d = retainer_thread_d + 2 * 0.15,
-                         l = retainer_engage + 0.02,
-                         pitch = retainer_pitch, internal = true, $fn = 96);
+            print_thread(d = retainer_thread_d, l = retainer_engage + 0.02,
+                         pitch = retainer_pitch, internal = true);
 
         // wide mouth ahead of the retainer (recesses it; clearance to fit/remove the ring)
         translate([0, 0, retainer_z0 + retainer_engage - 0.01])
-            cylinder(h = front_rim + filter_len + 1, d = retainer_thread_d + 0.3);
+            cylinder(h = front_rim + filter_len + 1, d = retainer_bore_d + 0.3);
     }
 }
 

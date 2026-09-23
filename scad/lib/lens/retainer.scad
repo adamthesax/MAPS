@@ -5,15 +5,13 @@ include <params.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 use <../util.scad>
+use <../threads.scad>
 
 module retainer() {
     difference() {
-        // externally threaded ring
+        // externally threaded ring (printed pair — see scad/lib/threads.scad)
         translate([0, 0, retainer_thk / 2])
-            threaded_rod(d = retainer_thread_d,
-                         l = retainer_thk,
-                         pitch = retainer_pitch,
-                         internal = false, $fn = 96);
+            print_thread(d = retainer_thread_d, l = retainer_thk, pitch = retainer_pitch);
 
         // clear bore
         translate([0, 0, -1])

@@ -54,8 +54,10 @@ The optic **loads from the front (muzzle) end** of the `barrel` and seats on a
 shoulder machined into the bore (the step from `pocket_bore` down to `barrel_bore`
 at `z = -element_edge_thk`). The `lens_retainer` then **threads into the barrel**
 ahead of the optic and clamps it back against that seat — same scheme as the
-`lens` component's `scad/lib/lens/retainer.scad` (a coarse, printed internal
-thread; no interchange requirement).
+`lens` component's `scad/lib/lens/retainer.scad`. It is a private printed pair, so it
+goes through `print_thread()`: 2.5 mm pitch, 45° flanks, 0.55 mm diametral clearance on
+the barrel side, and a 7.5 mm (3-turn) ring. See [printable-threads.md](printable-threads.md),
+which uses this thread as its case study.
 
 An earlier revision held the optic with 3 radial M3 set screws into a V-groove on
 a plain ring, with the front aperture and the rear (trunk) bore both narrower than
@@ -122,8 +124,8 @@ Reading −Z from the seating plane (`z = 0`):
 [ Ø8.0 filter ]  seats +Z-face-up on the land        z = -1.35 .. -0.8
 [ filter_ring Ø8.1 nose ]                            z = -3.35 .. -1.35
 [ funnel Ø8.6 -> Ø17 ]                               z = -3.35 .. -1.85
-[ Ø17 retainer thread ]  filter_ring body            z = -6.85 .. -3.35
-[ ring lead-in -> neck bore Ø22 -> barrel ]          z < -6.85
+[ Ø17 retainer thread ]  filter_ring body            z = -7.85 .. -3.35
+[ ring lead-in -> neck bore Ø22 -> barrel ]          z < -7.85
 ```
 
 The **`filter_ring`** is a top hat: Ø8.1 nose, Ø17 threaded body, Ø6 through-bore
@@ -132,7 +134,9 @@ then wind the ring in behind it with a long flat screwdriver down the Ø22 neck 
 (turn it before you plug the barrel on). It seats when the **`fring_nose_h` = 2.0 mm
 nose meets the filter face at the same instant the ring body shoulder bottoms on the
 funnel step** — so the filter is captured with *zero* clamping stress on the thin
-glass while the thread carries its full `fring_engage` (3.5 mm) engagement.
+glass while the thread carries its full `fring_engage` (4.5 mm = 3 × 1.5 mm pitch) engagement.
+That shoulder end of the thread is deliberately left unbevelled: a bevel there would let
+the ring run past its stop.
 
 The filter sits ~1 mm target-side of focus. At ~150 mm from a Ø74 aperture the
 marginal ray hits it at ≤ 14° — a ~2.5 nm passband shift against a 25 nm half-width,

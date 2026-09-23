@@ -45,6 +45,9 @@ the "Lens bodies" section of `docs/design-notes.md`.
    `flange_to_rear_vertex`), and which parts to print.
 
 ## Don't
+- Don't add a raw `threaded_rod()` for a printed pair. Use `print_thread()`
+  (`scad/lib/threads.scad`, rules in `docs/printable-threads.md`). Only a thread that has to
+  mate a bought part stays raw, tagged `// interchange: <standard>`.
 - Don't hand-edit `scad/variants/*.scad` / `components.json` / the README table — generated.
 - Don't expect a focus helicoid — barrels are fixed-focus; fine focus is the camera shim
   stack. A moving `focus_ring` is a future addition.

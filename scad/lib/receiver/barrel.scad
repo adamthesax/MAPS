@@ -11,6 +11,7 @@ include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 use <../util.scad>
 use <../hardware.scad>
+use <../threads.scad>
 
 taper_len = 14;                                 // blend from barrel OD down to the socket
 cell_h    = element_edge_thk + retainer_engage + front_rim;
@@ -40,13 +41,19 @@ module barrel() {
             cylinder(h = element_edge_thk + 0.02, d = pocket_bore);
         // internal retainer thread — lens_retainer screws in ahead of the optic and
         // clamps it back onto the seat; its own flat face is the clamp face (same
-        // scheme as scad/lib/lens/retainer.scad). Replaces the old set-screw ring.
+        // scheme as scad/lib/lens/retainer.scad). Printed pair -> print_thread():
+        // 45° flanks + clearance on this cutter. The barrel prints optic-end-down,
+        // so the thread axis is vertical and the flanks overhang at 45°.
         translate([0, 0, -element_edge_thk - retainer_engage/2])
-            threaded_rod(d = retainer_thread_d, l = retainer_engage,
-                         pitch = retainer_pitch, internal = true, $fn = $fn);
-        // wide mouth ahead of the retainer (recesses it; clearance to fit/remove the ring)
+            print_thread(d = retainer_thread_d, l = retainer_engage,
+                         pitch = retainer_pitch, internal = true);
+        // wide mouth ahead of the retainer (recesses it; clearance to fit/remove the
+        // ring), with a 45° flare at the bed face to swallow elephant's foot
         translate([0, 0, -cell_h - 0.01])
-            cylinder(h = front_rim + 0.02, d = retainer_thread_d + 0.3);
+            cylinder(h = front_rim + 0.02, d = retainer_bore_d + 0.3, $fa = PT_FA, $fs = PT_FS);
+        translate([0, 0, -cell_h - 0.01])
+            cylinder(h = 0.8, d1 = retainer_bore_d + 0.3 + 1.6, d2 = retainer_bore_d + 0.3,
+                     $fa = PT_FA, $fs = PT_FS);
         translate([0, 0, -0.01])
             cylinder(h = trunk_top + 0.02, d = barrel_bore);                      // main bore
         translate([0, 0, trunk_top - 0.01])

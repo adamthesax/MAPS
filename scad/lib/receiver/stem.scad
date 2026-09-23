@@ -14,6 +14,7 @@ include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 use <../util.scad>
 use <../hardware.scad>
+use <../threads.scad>
 
 // --- interface primitives (mirror of camera/interface.scad) ---------------
 module vr_corner_ears(h) {
@@ -54,11 +55,12 @@ module vr_optical_path() {
         cylinder(h = 1.55, d1 = fring_d, d2 = filter_pocket_d, $fn = 48);
     // retainer thread — the filter_ring body screws in from the -Z (barrel) end
     translate([0, 0, fring_z0 + fring_engage/2])
-        threaded_rod(d = fring_d + 0.4, l = fring_engage + 0.6,
-                     pitch = fring_pitch, internal = true, $fn = 48);
+        // (no bevel at the +Z end: the ring shoulder must stop exactly at fring_z1)
+        print_thread(d = fring_d, l = fring_engage + 0.6,
+                     pitch = fring_pitch, internal = true, bevel2 = false);
     // lead-in below the thread so the ring body enters from the neck bore
     translate([0, 0, cell_z0 - 0.05])
-        cylinder(h = (fring_z0 - cell_z0) + 0.1, d = fring_d + 0.6, $fn = 48);
+        cylinder(h = (fring_z0 - cell_z0) + 0.1, d = print_thread_bore(fring_d) + 0.2, $fn = 48);
     // neck bore — straight Ø neck_bore from the tip up to the cell lead-in
     translate([0, 0, stem_end_z - 1])
         cylinder(h = (cell_z0 + 0.05) - (stem_end_z - 1), d = neck_bore, $fn = 48);
@@ -77,6 +79,7 @@ module stem_cmount() {
         union() {
             // male 1"-32 thread, z = 0 .. thread_engage (into the camera).
             // bevel2 bevels only the OD corner at the tip (BOSL2), for an easy start.
+            // interchange: 1"-32 UN C-mount — mates the camera front plate / metal parts
             translate([0, 0, thread_engage/2])
                 threaded_rod(d = cmount_male_d, l = thread_engage,
                              pitch = CMOUNT_PITCH, internal = false,

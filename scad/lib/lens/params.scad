@@ -7,6 +7,7 @@
 // from z = 0 toward -Z, into the camera. (Mirror of the camera's +Z-into-body.)
 
 include <../constants.scad>
+use <../threads.scad>
 
 /* [Part selection] */
 part = "assembly"; // [assembly, barrel, retainer, hood]
@@ -50,13 +51,15 @@ seat_z       = flange_to_rear_vertex;        // rear face of the element group
 front_elem_z = seat_z + group_thk;           // front face of the element group
 bore_d       = element_d + 2 * element_fit;  // element pocket bore
 
-// coarse printed retainer thread (internal part, no interchange requirement)
-retainer_pitch    = 1.0;
-retainer_thread_d = bore_d + 3.0;            // major dia of the retainer thread
-retainer_thk      = max(2.5, element_edge_thk);
-retainer_engage   = 3.0;                     // axial thread length
+// printed retainer thread — a private printed pair, so print_thread() rules
+// (docs/printable-threads.md): >= 1.5 pitch, 45° flanks, >= 3 turns, auto clearance.
+retainer_pitch    = PT_MIN_PITCH;
+retainer_thread_d = bore_d + 3.0;            // nominal major dia (both halves)
+retainer_engage   = PT_MIN_TURNS * retainer_pitch;           // axial thread length in the barrel
+retainer_thk      = max(retainer_engage, element_edge_thk);  // ring height
+retainer_bore_d   = print_thread_bore(retainer_thread_d);    // what the barrel cutter really cuts
 
-barrel_od_auto = max(CMOUNT_MAJOR_D + 2 * wall + 2, retainer_thread_d + 2 * wall);
+barrel_od_auto = max(CMOUNT_MAJOR_D + 2 * wall + 2, retainer_bore_d + 2 * wall);
 barrel_od_c    = (barrel_od > 0) ? barrel_od : barrel_od_auto;
 
 retainer_z0    = front_elem_z;                     // retainer thread starts here (clamps group back)
@@ -73,7 +76,7 @@ assert(flange_to_rear_vertex > -thread_engage + 0.5,
     "Rear element vertex lands inside the male thread. Increase flange_to_rear_vertex.");
 assert(clear_aperture_d < element_d - 1.0,
     "clear_aperture_d must be >= 1 mm smaller than element_d (need a seat rim).");
-assert(barrel_od_c >= retainer_thread_d + 2 * wall - 0.01,
+assert(barrel_od_c >= retainer_bore_d + 2 * wall - 0.01,
     "Barrel OD too small for the retainer thread + wall. Raise barrel_od, or drop element_d / wall.");
 assert(filter_thread == "none" || filter_major > clear_aperture_d + 3,
     "filter_thread major diameter leaves no wall over the clear aperture; pick a larger filter size.");
