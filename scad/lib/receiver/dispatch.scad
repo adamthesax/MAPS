@@ -28,8 +28,11 @@ else {
     translate([0, 0, -flange_to_optic - explode]) {
         barrel();
         % translate([0, 0, -explode * 0.4]) element_ghost();
-        translate([0, 0, -(element_edge_thk + retainer_thk) - explode * 0.8])
-            lens_retainer();
+        // lens_retainer threads in from the front (-Z); mirror it so its clamp
+        // face (local z = 0) meets the optic's front face, same as filter_ring below.
+        translate([0, 0, -element_edge_thk - explode * 0.8])
+            mirror([0, 0, 1])
+                lens_retainer();
     }
 
     // filter + its ring, exploded together out the -Z (barrel) end of the stem cell
