@@ -23,6 +23,7 @@ module hood() {
                 cylinder(h = hood_length, d1 = outer_d, d2 = flare_d);
         }
         // mount interface
+        // interchange: Mxx x0.5 photo filter thread — same thread as bought filters
         if (threaded)
             translate([0, 0, collar_h / 2])
                 threaded_rod(d = filter_major + 2 * 0.2, l = collar_h + 0.02,

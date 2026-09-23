@@ -28,6 +28,7 @@ module lens_tower(z0 = 0) {
 module lens_interface_cut(z0 = 0) {
     if (mount_type != "blank") {
         if (lens_mount_style == "thread") {
+            // interchange: 1"-32 UN C-mount — must take bought metal C-mount lenses
             translate([0, 0, z0 - thread_engage/2])
                 threaded_rod(d = CMOUNT_MAJOR_D + 2*thread_clearance,
                              l = thread_engage + 0.02,

@@ -7,13 +7,14 @@ include <params.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 use <../util.scad>
+use <../threads.scad>
 
 module lens_retainer() {
     difference() {
-        // externally threaded ring — its flat rear face (z = 0) is the clamp face
+        // externally threaded ring — its flat rear face (z = 0) is the clamp face and
+        // prints on the bed; print_thread's bottom bevel absorbs elephant's foot
         translate([0, 0, retainer_thk/2])
-            threaded_rod(d = retainer_thread_d, l = retainer_thk,
-                         pitch = retainer_pitch, internal = false, $fn = $fn);
+            print_thread(d = retainer_thread_d, l = retainer_thk, pitch = retainer_pitch);
         translate([0, 0, -1]) cylinder(h = retainer_thk + 2, d = clear_aperture_d);
         // two spanner notches in the front (outer) face
         for (a = [0, 90])
@@ -38,8 +39,8 @@ module filter_ring() {
                 cylinder(h = fring_nose_h - 0.79 + 0.2, d = nose_d, $fn = 40);
             // threaded body
             translate([0, 0, fring_nose_h + body_h/2])
-                threaded_rod(d = fring_d, l = body_h, pitch = fring_pitch,
-                             internal = false, $fn = 48);
+                // no bevel at the shoulder end — it is the depth stop (see above)
+                print_thread(d = fring_d, l = body_h, pitch = fring_pitch, bevel1 = false);
         }
         translate([0, 0, -1])
             cylinder(h = fring_nose_h + body_h + 2, d = filter_clear_d, $fn = 40);

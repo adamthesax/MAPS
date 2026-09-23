@@ -21,6 +21,7 @@
 // scad/lib/camera/interface.scad's Z convention.
 
 include <../constants.scad>
+use <../threads.scad>
 
 /* [Part selection] */
 part = "assembly"; // [assembly, stem, barrel, lens_retainer, filter_ring]
@@ -118,12 +119,15 @@ barrel_bore   = clear_aperture_d + 2;                  // main bore behind the e
 // ---- lens retainer: threads into the barrel ahead of the optic and clamps it
 // back onto the seat rim at z = -element_edge_thk (same scheme as
 // scad/lib/lens/retainer.scad) — no more set screws / V-groove.
-retainer_pitch    = 2.0;                       // coarse thread — big diameter, printed
-retainer_thread_d = pocket_bore + 4.0;         // major dia of the retainer thread
-retainer_thk      = max(4.0, element_edge_thk);
+// A private printed pair -> print_thread() (45° flanks, auto clearance); see
+// docs/printable-threads.md. Both halves use the same nominal retainer_thread_d.
+retainer_pitch    = 2.5;                       // coarse: forgiving at Ø85, 45° flanks
+retainer_thread_d = pocket_bore + 4.0;         // nominal major dia of the retainer thread
+retainer_thk      = max(4.0, element_edge_thk, PT_MIN_TURNS * retainer_pitch);
 retainer_engage   = retainer_thk + 1.0;        // thread cut a touch deeper than the ring (lead-in slack)
+retainer_bore_d   = print_thread_bore(retainer_thread_d);   // what the barrel cutter really cuts
 
-barrel_od_c   = (barrel_od > 0) ? barrel_od : max(element_d + 2*wall + 4, retainer_thread_d + 2*wall);
+barrel_od_c   = (barrel_od > 0) ? barrel_od : max(element_d + 2*wall + 4, retainer_bore_d + 2*wall);
 
 // ---- the light cone behind the optic ----
 // Ø0 at the flange face, Ø clear_aperture_d at the optic (focus ~ at the flange —
@@ -137,6 +141,16 @@ socket_bot_z   = -stem_neck_len - join_len;            // deepest point of the s
 neck_bore      = ceil(cone_d(socket_bot_z) + 4);       // clears the cone at the socket bottom
 neck_od        = neck_bore + 2*wall;
 socket_bore    = neck_od + 2*join_fit;
+socket_od      = socket_bore + 2*wall;                 // barrel wall around the socket
+
+// Axial length of the barrel's OD->socket blend. The barrel prints optic-end-down,
+// so the INNER face of this cone cantilevers inward over the main bore as it climbs
+// — a support-free FDM overhang needs it no steeper than 45 deg from vertical.
+// Sized from the OD drop, which is never smaller than the bore drop (barrel_bore <=
+// barrel_od - 2*wall), so the bore taper is <= 45 deg too. Floor at 14 mm so small
+// stacks still get a real blend.
+taper_len       = max(14, (barrel_od_c - socket_od) / 2);
+taper_from_vert = atan2((barrel_bore - socket_bore) / 2, taper_len);   // bore overhang
 
 shoulder_d     = max(neck_od + 6, 30);                 // "C" grip / thread backstop disc
 
@@ -165,13 +179,13 @@ fs_z1    = 0;                                       // seat land top = seating p
 fs_z0    = fs_z1 - fs_len;                          // -0.8  (its -Z face is the filter seat)
 filt_z1  = fs_z0;                                   // filter +Z (camera-side) face — on the seat
 filt_z0  = filt_z1 - filter_thk;                    // filter -Z (target-side) face
-fring_pitch  = 1.5;
-fring_d      = 17;                                  // filter retainer thread major dia
+fring_pitch  = 1.5;                                 // PT_MIN_PITCH — small ring, printed pair
+fring_d      = 17;                                  // filter retainer thread nominal major dia
 fring_nose_h = 2.0;                                 // filter_ring nose: filter face -> its thread shoulder
 // stem thread starts exactly where the ring's body shoulder lands when the nose is
 // on the filter -> full engagement AND zero clamping stress on the 0.55 mm glass.
 fring_z1     = filt_z0 - fring_nose_h;              // ring thread shoulder / stem thread start (-Z)
-fring_engage = 3.5;                                 // thread length
+fring_engage = PT_MIN_TURNS * fring_pitch;         // thread length (4.5)
 fring_z0     = fring_z1 - fring_engage;             // -Z end of the stem retainer thread
 cell_z0      = fring_z0 - 2.0;                      // -Z end of the cell (ring lead-in)
 // clear bore through the male thread / flange, toward the detector
@@ -184,13 +198,13 @@ assert(clear_aperture_d <= element_d - 2.0,
     "clear_aperture_d must be >= 2 mm smaller than element_d (need a seat rim).");
 assert(barrel_bore + 2*wall <= barrel_od_c + 0.01,
     "barrel_od too small for the bore + 2*wall. Raise barrel_od or drop clear_aperture_d / wall.");
-assert(barrel_od_c >= retainer_thread_d + 2*wall - 0.01,
+assert(barrel_od_c >= retainer_bore_d + 2*wall - 0.01,
     "barrel_od too small for the lens retainer thread + wall. Raise barrel_od, or drop element_d / wall.");
 assert(filter_clear_d + 1.5 <= filter_d,
     "filter_clear_d leaves too little seat rim under the filter.");
-assert(fring_d - 1.95*fring_pitch >= filter_pocket_d,
+assert(print_thread_minor(fring_d, fring_pitch) >= filter_pocket_d,
     "retainer thread minor diameter clashes the Ø8.6 filter pocket — raise fring_d.");
-assert(fring_d + 2*wall <= neck_od,
+assert(print_thread_bore(fring_d) + 2*wall <= neck_od,
     "filter retainer thread + wall does not fit the stem neck — raise stem_neck_len/join_len (grows neck_od) or drop fring_d.");
 assert(!is_cmount || thread_bore_d + 2*wall <= cmount_male_d - 1,
     "thread_bore_d leaves too little wall on the male 1\"-32 thread.");
@@ -200,6 +214,8 @@ assert(neck_bore >= cone_d(socket_bot_z) + 2,
     "stem neck bore vignettes the light cone at the joint. Shorten stem_neck_len / join_len.");
 assert(socket_bore + 2*wall <= barrel_od_c,
     "barrel wall around the stem socket is thinner than `wall`.");
+assert(barrel_bore >= cone_d(-flange_to_optic + barrel_len - join_len - taper_len) + 2,
+    "barrel bore taper starts too early and vignettes the light cone — shorten taper_len.");
 assert(barrel_len > join_len + 20,
     "flange_to_optic too short for this barrel.");
 assert(stem_neck_len > 4,
@@ -210,6 +226,8 @@ echo(str("== mapscam receiver ==  element Ø", element_d, " f", focal_length,
 echo(str("   barrel  Ø", barrel_od_c, " x ", barrel_len, " mm   bore Ø", barrel_bore));
 echo(str("   stem    neck Ø", neck_od, " (bore Ø", neck_bore, ")   plug ", join_len,
          " mm x3 ", join_screw));
+echo(str("   taper   ", taper_len, " mm blend, bore ", taper_from_vert,
+         " deg from vertical (<=45 prints support-free, optic-end-down)"));
 echo(is_cmount
      ? str("   mount   C — male 1\"-32, ", thread_engage, " mm engage, shoulder Ø", shoulder_d)
      : str("   mount   flange ", outer_x, " x ", outer_y, " mm"));

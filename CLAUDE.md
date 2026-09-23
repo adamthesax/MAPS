@@ -33,7 +33,12 @@ For ad hoc CLI runs, set it yourself. BOSL2 is a git submodule (`make vendor` to
    `build/components.mk` (`DFLAGS_<name>`) and the `Makefile` passes them on every render.
    The stub's in-file re-assignments are Customizer-only (they don't cross `use <>`; see
    `docs/modularity.md`). `make check` guards this with `check-overrides`.
-5. **Parts must render 2-manifold individually.** The `assembly` view may not (coincident
+5. **Printed threads follow `docs/printable-threads.md`.** Every private printed pair
+   (both halves printed) goes through `print_thread()` in `scad/lib/threads.scad`: 45° flanks,
+   ≥ 1.5 mm pitch, ≥ 3 turns, automatic clearance on the internal half. A raw BOSL2
+   `threaded_rod()` is only allowed for a thread that has to mate a bought part, tagged
+   `// interchange: <standard>`. `make check` runs `check-threads` to enforce this.
+6. **Parts must render 2-manifold individually.** The `assembly` view may not (coincident
    mating faces) — it's preview only, not for STL export.
 
 ## Layout

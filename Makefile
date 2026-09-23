@@ -3,7 +3,7 @@
 #   make            # STLs for every component + preview PNGs
 #   make gen        # regenerate scad/variants/*.scad + build wiring from components/*.toml
 #   make gen-check  # fail if a committed generated file is stale (run `make gen`)
-#   make check      # gen-check + every component/part with --hardwarnings + asserts
+#   make check      # gen-check + thread lint + every component/part with --hardwarnings + asserts
 #   make stl        # just the STLs
 #   make renders    # just the PNG previews
 #   make <variant>  # every part of one component, e.g. `make generic_29mm_cs`
@@ -76,7 +76,7 @@ $(foreach v,$(ALL_VARIANTS),$(eval $(call VARIANT_rule,$(v))))
 # component/part to a throwaway echo file with --hardwarnings. Any warning or failed
 # assert makes openscad exit non-zero. $(foreach) (not a shell loop) so make can
 # resolve each job's $(DFLAGS_<variant>).
-check: gen-check build/.gen-stamp check-overrides
+check: gen-check check-threads build/.gen-stamp check-overrides
 	@set -e; \
 	$(foreach j,$(CHECK_JOBS), \
 	  echo ">> $(subst /, / ,$(j))"; \
@@ -90,6 +90,13 @@ check: gen-check build/.gen-stamp check-overrides
 # does not reach the geometry both come out at the C length. Compare the STL Z
 # extents, not bytes — CGAL tessellation is not deterministic between runs.
 zext = awk '/vertex/{z=$$4; if(n++==0){lo=hi=z}; if(z<lo)lo=z; if(z>hi)hi=z} END{printf "%.1f", hi-lo}' $(1)
+
+.PHONY: check-threads
+# Printed threads must go through print_thread() (scad/lib/threads.scad) or be tagged
+# `// interchange: <standard>`. See docs/printable-threads.md.
+check-threads:
+	@echo ">> printable-thread lint"
+	@python3 tools/check_threads.py
 
 .PHONY: check-overrides
 check-overrides: build/.gen-stamp

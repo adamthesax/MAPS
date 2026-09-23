@@ -53,6 +53,19 @@ function gland_hole_d(g) =
     0;   // "none"
 
 // ---------------------------------------------------------------------------
+// Printed threads — private printed-to-printed pairs (scad/lib/threads.scad).
+// Tuned for a 0.4 mm nozzle at the 0.16 mm layers in docs/print-settings.md.
+// Rationale for each number: docs/printable-threads.md.
+// ---------------------------------------------------------------------------
+PT_MIN_PITCH    = 1.5;    // mm; 2.0+ preferred. Below ~1.5 the flanks are 2 lines wide
+PT_MIN_TURNS    = 3;      // threaded length >= this many pitches (blunt starts eat ~1)
+PT_MIN_D        = 8;      // below this, use a heat-set insert or a bought nut
+PT_DEPTH_RATIO  = 0.35;   // radial depth / pitch at 45° flanks -> 0.15·P flat crest + root
+PT_CLEAR_BASE   = 0.30;   // diametral clearance floor, mm
+PT_CLEAR_PER_MM = 0.003;  // + this per mm of diameter (shrink / out-of-round scale with d)
+PT_FA = 1;  PT_FS = 0.4;  // facets: <= 0.4 mm chords, so flats don't eat the clearance
+
+// ---------------------------------------------------------------------------
 // Front filter threads (CCTV / photo accessory sizes). [major_d, pitch] in mm.
 // "none" -> [0, 0]. Printed at real pitch; FDM accuracy is marginal at 0.5 mm.
 // ---------------------------------------------------------------------------

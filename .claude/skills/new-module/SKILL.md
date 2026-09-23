@@ -32,6 +32,10 @@ These are camera-enclosure modules — they live in `scad/lib/camera/`. Shared h
 3. `use <<module>.scad>` + a `part == "<module>"` branch in `scad/lib/camera/dispatch.scad`,
    and place it in the exploded `assembly` preview.
 4. Add `<module>` to `parts` / `check_parts` in `components/_type/camera.toml`.
+   Threads between two printed parts (a screw-on cap, a drawer lock): `use <../threads.scad>`
+   and `print_thread()`. Size walls from `print_thread_bore()` / `print_thread_minor()`
+   (`docs/printable-threads.md`). A raw `threaded_rod()` is only for mating bought
+   parts, tagged `// interchange: <standard>`.
 5. `make gen && make check`, then render and read the PNG.
 6. Update `docs/modularity.md` (module list), `docs/bom.md`, `README.md` layout.
 
