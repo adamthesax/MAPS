@@ -1,6 +1,6 @@
 // mapscam receiver — the two rings.
-//   lens_retainer : plain ring, drops into the barrel ahead of the Ø80 optic and
-//                   is held by the barrel's 3 radial M3 set screws (groove in OD).
+//   lens_retainer : threads into the barrel ahead of the Ø80 optic and clamps it
+//                   back against the seat rim (same scheme as scad/lib/lens/retainer.scad).
 //   filter_ring   : small threaded ring, clamps the 808 nm filter in the stem.
 
 include <params.scad>
@@ -9,19 +9,16 @@ include <BOSL2/threading.scad>
 use <../util.scad>
 
 module lens_retainer() {
-    ring_od = pocket_bore - 0.4;      // slip fit in the pocket
     difference() {
-        cylinder(h = retainer_thk, d = ring_od);
-        translate([0, 0, -0.01]) cylinder(h = retainer_thk + 0.02, d = clear_aperture_d);
-        // V-groove around the OD for the set-screw tips
+        // externally threaded ring — its flat rear face (z = 0) is the clamp face
         translate([0, 0, retainer_thk/2])
-            rotate_extrude($fn = $fn)
-                translate([ring_od/2 - 0.6, 0])
-                    circle(d = 2.4, $fn = 24);
-        // two spanner notches in the front face
+            threaded_rod(d = retainer_thread_d, l = retainer_thk,
+                         pitch = retainer_pitch, internal = false, $fn = $fn);
+        translate([0, 0, -1]) cylinder(h = retainer_thk + 2, d = clear_aperture_d);
+        // two spanner notches in the front (outer) face
         for (a = [0, 90])
             rotate([0, 0, a]) translate([0, 0, retainer_thk - 1.0])
-                cube([ring_od + 2, 2.0, 2.2], center = true);
+                cube([retainer_thread_d + 2, 2.0, 2.2], center = true);
     }
 }
 

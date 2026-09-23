@@ -48,6 +48,22 @@ takes up the detector-position slack, same as a normal lens.
 inside the `barrel` adjustable (a threaded element cell), which is a small, cheap
 part and keeps the load path out of any moving joint.
 
+## Ø80 optic cell and lens retainer
+
+The optic **loads from the front (muzzle) end** of the `barrel` and seats on a
+shoulder machined into the bore (the step from `pocket_bore` down to `barrel_bore`
+at `z = -element_edge_thk`). The `lens_retainer` then **threads into the barrel**
+ahead of the optic and clamps it back against that seat — same scheme as the
+`lens` component's `scad/lib/lens/retainer.scad` (a coarse, printed internal
+thread; no interchange requirement).
+
+An earlier revision held the optic with 3 radial M3 set screws into a V-groove on
+a plain ring, with the front aperture and the rear (trunk) bore both narrower than
+the Ø80 element — the element could not physically pass through either end to
+reach its own pocket. The threaded ring fixes this: the whole front bore, from the
+muzzle through the retainer thread, stays wider than `element_d` until the seat
+shoulder, so the optic drops straight in and only the last step narrows to hold it.
+
 ## Coordinate convention
 
 Mirror of the camera: **`z = 0` is the seating plane** (the `"C"` shoulder, or the
@@ -75,10 +91,11 @@ the narrow `stem` neck takes over. Push `stem_neck_len` up and `neck_bore` grows
 with it (asserted); push it down and the neck gets stubby.
 
 `assert()`s fail the render if: the clear aperture leaves no seat rim; a wall
-(barrel / stem / socket) is under `wall`; the neck bore vignettes the cone at the
-joint; the retainer thread + wall don't fit the stem neck; the filter cell runs
-into the stem↔barrel joint; `thread_bore_d` leaves too little wall on the male
-thread; or `flange_to_optic` is too short for the barrel.
+(barrel / stem / socket) is under `wall`; the lens retainer thread + wall don't
+fit the barrel; the neck bore vignettes the cone at the joint; the filter
+retainer thread + wall don't fit the stem neck; the filter cell runs into the
+stem↔barrel joint; `thread_bore_d` leaves too little wall on the male thread;
+or `flange_to_optic` is too short for the barrel.
 
 ## Parts (`make vibrometer_80mm`)
 
@@ -86,7 +103,7 @@ thread; or `flange_to_optic` is too short for the barrel.
 |---|---|---|
 | `stem` | 1 | camera interface (`"C"` male 1"-32 + grip shoulder, or `"flange"` register) + filter cell in the neck root + Ø28 neck. Print shoulder/flange-down; no support. |
 | `barrel` | 1 | Ø90 × ~145 mm; optic cell + tube + rear socket. Print optic-end-down. Big — budget time / filament. |
-| `lens_retainer` | 1 | plain ring, held by the barrel's 3 radial M3 set screws. |
+| `lens_retainer` | 1 | threaded ring: loads from the front (muzzle) end, screws into the barrel's internal thread, and clamps the optic back onto its seat rim (same scheme as `scad/lib/lens/retainer.scad`). |
 | `filter_ring` | 1 | top-hat: a Ø8.1 nose drops onto the filter, the Ø17 threaded body engages the stem. Turn from the −Z (barrel) end. |
 
 ## 808 nm filter cell
@@ -122,8 +139,9 @@ marginal ray hits it at ≤ 14° — a ~2.5 nm passband shift against a 25 nm ha
 negligible (the angle is set by aperture ÷ focal length, so the ±few mm of position
 doesn't matter).
 
-Fasteners: 3 × M3 (stem↔barrel joint, tapped into the socket wall); 3 × M3 set
-screws (lens retainer); `"flange"` only: 4 × M3 into the body inserts.
+Fasteners: 3 × M3 (stem↔barrel joint, tapped into the socket wall); the lens
+retainer is a threaded ring, no fasteners; `"flange"` only: 4 × M3 into the
+body inserts.
 
 ## GUESSED numbers — measure and update `components/receiver/vibrometer_80mm.toml`
 

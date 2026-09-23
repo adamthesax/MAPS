@@ -71,7 +71,6 @@ filter_fit     = 0.30;  // [0:0.05:0.6] radial slip fit for the filter in its po
 wall            = 3;    // [2:0.5:6] barrel / stem wall thickness
 barrel_od       = 0;    // 0 = auto (element_d + 2*wall + 4); or pin a value in mm
 front_rim       = 2.0;  // [0:0.5:6] barrel material ahead of the lens retainer
-retainer_thk    = 4.0;  // [2:0.5:8] lens retainer ring thickness
 
 /* [Quality] */
 $fn = 64;
@@ -114,8 +113,17 @@ shoulder_thk  = 3.0;
 // ---- optic cell ----
 pocket_bore   = element_d + 2*element_fit;
 seat_rim_w    = (element_d - clear_aperture_d) / 2;
-barrel_od_c   = (barrel_od > 0) ? barrel_od : element_d + 2*wall + 4;
 barrel_bore   = clear_aperture_d + 2;                  // main bore behind the element
+
+// ---- lens retainer: threads into the barrel ahead of the optic and clamps it
+// back onto the seat rim at z = -element_edge_thk (same scheme as
+// scad/lib/lens/retainer.scad) — no more set screws / V-groove.
+retainer_pitch    = 2.0;                       // coarse thread — big diameter, printed
+retainer_thread_d = pocket_bore + 4.0;         // major dia of the retainer thread
+retainer_thk      = max(4.0, element_edge_thk);
+retainer_engage   = retainer_thk + 1.0;        // thread cut a touch deeper than the ring (lead-in slack)
+
+barrel_od_c   = (barrel_od > 0) ? barrel_od : max(element_d + 2*wall + 4, retainer_thread_d + 2*wall);
 
 // ---- the light cone behind the optic ----
 // Ø0 at the flange face, Ø clear_aperture_d at the optic (focus ~ at the flange —
@@ -176,6 +184,8 @@ assert(clear_aperture_d <= element_d - 2.0,
     "clear_aperture_d must be >= 2 mm smaller than element_d (need a seat rim).");
 assert(barrel_bore + 2*wall <= barrel_od_c + 0.01,
     "barrel_od too small for the bore + 2*wall. Raise barrel_od or drop clear_aperture_d / wall.");
+assert(barrel_od_c >= retainer_thread_d + 2*wall - 0.01,
+    "barrel_od too small for the lens retainer thread + wall. Raise barrel_od, or drop element_d / wall.");
 assert(filter_clear_d + 1.5 <= filter_d,
     "filter_clear_d leaves too little seat rim under the filter.");
 assert(fring_d - 1.95*fring_pitch >= filter_pocket_d,
